@@ -5,11 +5,8 @@ import com.amazonaws.services.lambda.runtime.events.S3Event
 import com.amazonaws.services.s3.event.S3EventNotification.S3Entity
 import okhttp3._
 import org.apache.commons.codec.digest.DigestUtils
-import org.parboiled2.Parser
 
 import scala.collection.JavaConverters._
-
-import scala.util.parsing.combinator.RegexParsers
 
 class Lambda extends RequestHandler[S3Event, String] {
 
@@ -39,7 +36,7 @@ class Lambda extends RequestHandler[S3Event, String] {
     RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "")
 
   /**
-   * Send a hard purge request to Fastly API.
+   * Send a soft purge request to Fastly API.
    *
    * @return whether a piece of content was purged or not
    */
@@ -65,18 +62,4 @@ class Lambda extends RequestHandler[S3Event, String] {
     }
   }
 
-}
-
-// /aws-frontend-store/CODE/frontsapi/pressed/live/au/fapi/pressed.json
-class ParseS3Path(stage: String, input: String) extends Parser {
-    def rootParser = rule { s"$stage/frontsapi/pressed/live" }
-    def suffix = rule { "/fapi/pressed.json" }
-    def component = rule { "/[^/]+".r }
-    def id = rule { (component*) }
-    def expr = rule { rootParser ~> id <~ suffix }
-
-    def apply() = rule { expr ~ EOI } match {
-      case Success(matched, _) => Some(matched)
-      case x => { println(s"erro: $x"); None }
-    }
 }
