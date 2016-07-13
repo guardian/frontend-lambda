@@ -1,6 +1,6 @@
 package com.gu.purge.facia
 
-import org.parboiled2.{Parser, ParserInput, Rule1}
+import org.parboiled2.{ Parser, ParserInput, Rule1 }
 
 import scala.util.Success
 

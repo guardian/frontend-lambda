@@ -8,7 +8,7 @@ import org.apache.commons.codec.digest.DigestUtils
 
 import scala.collection.JavaConverters._
 
-class Lambda(stage: String = "DEV" /*TODO*/) extends RequestHandler[S3Event, String] {
+class Lambda(stage: String = "DEV" /*TODO*/ ) extends RequestHandler[S3Event, String] {
 
   private lazy val config = Config.load(stage)
   private lazy val httpClient = new OkHttpClient()
