@@ -8,10 +8,9 @@ import org.apache.commons.codec.digest.DigestUtils
 
 import scala.collection.JavaConverters._
 
-class Lambda extends RequestHandler[S3Event, String] {
+class Lambda(stage: String = "DEV" /*TODO*/) extends RequestHandler[S3Event, String] {
 
-  val STAGE = "DEV" /*TODO*/
-  private lazy val config = Config.load(STAGE)
+  private lazy val config = Config.load(stage)
   private lazy val httpClient = new OkHttpClient()
 
   override def handleRequest(event: S3Event, context: Context) = {
@@ -22,7 +21,7 @@ class Lambda extends RequestHandler[S3Event, String] {
     println(s"Processing ${entities.size} updated entities ...")
 
     entities.foreach { entity =>
-      new ParseS3Path(STAGE, entity.getObject.getKey).apply() map { id =>
+      new ParseS3Path(stage, entity.getObject.getKey).apply() map { id =>
         sendPurgeRequest(id)
       }
     }
@@ -51,10 +50,10 @@ class Lambda extends RequestHandler[S3Event, String] {
       .header("Fastly-Soft-Purge", "1")
       .post(EmptyJsonBody)
       .build()
-    if (STAGE == "PROD") {
+
+    if (stage == "PROD") {
       val response = httpClient.newCall(request).execute()
       println(s"Sent purge request for content with ID [$contentId]. Response from Fastly API: [${response.code}] [${response.body.string}]")
-
       response.code == 200
     } else {
       println(s"Didn't sent purge request for content with ID [$contentId].")

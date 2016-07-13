@@ -12,5 +12,6 @@ libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-lambda-java-events" % "1.3.0",
   "com.squareup.okhttp3" % "okhttp" % "3.2.0",
   "org.parboiled" %% "parboiled" % "2.1.3",
-  "org.scalatest" %% "scalatest" % "2.2.2" % "test"
+  "org.scalatest" %% "scalatest" % "2.2.2" % "test",
+  "org.mockito" % "mockito-all" % "1.9.5" % "test"
 )
