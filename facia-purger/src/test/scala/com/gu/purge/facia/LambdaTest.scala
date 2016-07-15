@@ -24,7 +24,7 @@ class LambdaTest extends FlatSpec with MockitoSugar {
   val lambda = new Lambda()
   lambda.stage = "DEV"
 
-  "The lambda" should "complete and return empty string" in {
+  "The lambda" should "complete and return true given a valid key" in {
     lambda.handleRequest(new S3Event(List[S3EventNotificationRecord](record).asJava), mockContext) should be(true)
   }
 
