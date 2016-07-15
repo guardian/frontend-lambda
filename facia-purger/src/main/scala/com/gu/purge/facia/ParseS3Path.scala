@@ -1,6 +1,6 @@
 package com.gu.purge.facia
 
-import org.parboiled2.{ Parser, ParserInput, Rule1 }
+import org.parboiled2.{Parser, ParserInput}
 
 import scala.util.Success
 
@@ -13,8 +13,9 @@ class ParseS3Path(stage: String, val input: ParserInput) extends Parser {
   def front = rule { capture(oneOrMore(!suffix ~ ANY)) }
   def expr = rule { prefix ~ front ~ suffix ~ EOI }
 
-  def apply() = expr.run() match {
+  def run(): Option[String] = expr.run() match {
     case Success(matched) => Some(matched)
     case x => { println(s"error: $x"); None }
   }
 }
+

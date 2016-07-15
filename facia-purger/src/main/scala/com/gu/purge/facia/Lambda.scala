@@ -22,7 +22,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] {
     println(s"Processing ${entities.size} updated entities ...")
 
     entities.forall { entity =>
-      new ParseS3Path(stage, entity.getObject.getKey).apply().map(sendPurgeRequest).isDefined
+      new ParseS3Path(stage, entity.getObject.getKey).run().map(sendPurgeRequest).isDefined
     }
   }
 
