@@ -12,7 +12,7 @@ class ParseS3PathTest extends FlatSpec with Matchers {
     new ParseS3Path("DEV", "DEV/frontsapi/pressed/live/au/sport/fapi/pressed.json")() should be(Some("au/sport"))
   }
 
-  it should "not parse a front name without a slash" in {
+  it should "not parse when no front name is given" in {
     new ParseS3Path("PROD", "PROD/frontsapi/pressed/live/fapi/pressed.json")() should be(None)
   }
 
