@@ -8,7 +8,7 @@ import org.apache.commons.codec.digest.DigestUtils
 
 import scala.collection.JavaConverters._
 
-class Lambda() extends RequestHandler[S3Event, String] {
+class Lambda() extends RequestHandler[S3Event, Boolean] {
 
   var stage = "DEV" // TODO
   private lazy val config = Config.load(stage)
@@ -21,14 +21,9 @@ class Lambda() extends RequestHandler[S3Event, String] {
 
     println(s"Processing ${entities.size} updated entities ...")
 
-    entities.foreach { entity =>
-      new ParseS3Path(stage, entity.getObject.getKey).apply() map { id =>
-        sendPurgeRequest(id)
-      }
+    entities.forall { entity =>
+      new ParseS3Path(stage, entity.getObject.getKey).apply().map(sendPurgeRequest).isDefined
     }
-
-    println(s"Finished.")
-    ""
   }
 
   // OkHttp requires a media type even for an empty POST body
