@@ -1,13 +1,14 @@
 package com.gu.purge.facia
 import java.util.Properties
 import com.amazonaws.services.s3.AmazonS3Client
+import com.amazonaws.auth.profile._
 import scala.util.Try
 
 case class Config(fastlyServiceId: String, fastlyApiKey: String)
 
 object Config {
 
-  val s3 = new AmazonS3Client()
+  val s3 = new AmazonS3Client(new ProfileCredentialsProvider("frontend"))
 
   def load(stage: String): Config = {
     println("Loading config...")
