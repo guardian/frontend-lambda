@@ -1,11 +1,11 @@
 package com.gu.purge.facia
 
-import org.parboiled2.{Parser, ParserInput}
+import org.parboiled2.{ Parser, ParserInput }
 
 import scala.util.Success
 
 // /aws-frontend-store/CODE/frontsapi/pressed/live/au/fapi/pressed.json
-class ParseS3Path(stage: String, val input: ParserInput) extends Parser {
+class ParseS3Path(stage: String, val input: ParserInput) extends Parser with Logging {
   def prefix = rule { s"$stage/frontsapi/pressed/live/" }
   val suffix = "/fapi/pressed.json"
 
@@ -15,7 +15,10 @@ class ParseS3Path(stage: String, val input: ParserInput) extends Parser {
 
   def run(): Option[String] = expr.run() match {
     case Success(matched) => Some(matched)
-    case x => { println(s"error: $x"); None }
+    case x => {
+      log.error(s"error: $x")
+      None
+    }
   }
 }
 

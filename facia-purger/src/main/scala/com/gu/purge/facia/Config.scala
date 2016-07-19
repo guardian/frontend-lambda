@@ -6,19 +6,19 @@ import scala.util.Try
 
 case class Config(fastlyServiceId: String, fastlyApiKey: String)
 
-object Config {
+object Config extends Logging {
 
   val s3 = new AmazonS3Client(new ProfileCredentialsProvider("frontend"))
 
   def load(stage: String): Config = {
-    println("Loading config...")
+    log.info("Loading facia-purger config...")
     val properties = loadProperties("aws-frontend-store", s"$stage/config/facia-purger.properties") getOrElse sys.error("Could not load config file from s3. This lambda will not run.")
 
     val fastlyServiceId = getMandatoryConfig(properties, "fastly.serviceId")
-    println(s"Fastly service ID = $fastlyServiceId")
+    log.debug(s"Fastly service ID = $fastlyServiceId")
 
     val fastlyApiKey = getMandatoryConfig(properties, "fastly.apiKey")
-    println(s"Fastly API key = ${fastlyApiKey.take(3)}...")
+    log.debug(s"Fastly API key = ${fastlyApiKey.take(3)}...")
 
     Config(fastlyServiceId, fastlyApiKey)
   }
