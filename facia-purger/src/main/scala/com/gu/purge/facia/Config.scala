@@ -1,14 +1,24 @@
 package com.gu.purge.facia
+
 import java.util.Properties
-import com.amazonaws.services.s3.AmazonS3Client
-import com.amazonaws.auth.profile._
 import scala.util.Try
+
+import com.amazonaws.auth.profile._
+import com.amazonaws.auth.{ AWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, InstanceProfileCredentialsProvider, SystemPropertiesCredentialsProvider }
+import com.amazonaws.services.s3.AmazonS3Client
 
 case class Config(fastlyServiceId: String, fastlyApiKey: String)
 
 object Config extends Logging {
 
-  val s3 = new AmazonS3Client(new ProfileCredentialsProvider("frontend"))
+  val credentialsProviderChain = new AWSCredentialsProviderChain(
+    new EnvironmentVariableCredentialsProvider,
+    new SystemPropertiesCredentialsProvider,
+    new ProfileCredentialsProvider("frontend"),
+    new InstanceProfileCredentialsProvider
+  )
+
+  val s3 = new AmazonS3Client(credentialsProviderChain)
 
   def load(stage: String): Config = {
     log.info("Loading facia-purger config...")
