@@ -17,3 +17,12 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.2" % "test",
   "org.mockito" % "mockito-all" % "1.9.5" % "test"
 )
+
+enablePlugins(RiffRaffArtifact, UniversalPlugin)
+
+riffRaffPackageType := (packageZipTarball in Universal).value
+
+def env(key: String): Option[String] = Option(System.getenv(key))
+riffRaffBuildIdentifier := env("TRAVIS_BUILD_NUMBER").getOrElse("DEV")
+riffRaffUploadArtifactBucket := Option("riffraff-artifact")
+riffRaffUploadManifestBucket := Option("riffraff-builds")
