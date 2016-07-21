@@ -4,7 +4,7 @@ scala:
 jdk: oraclejdk8
 branches:
   only:
-  - master
+  - facia-purger-cloudform
 cache:
   directories:
   - $HOME/.sbt/0.13
