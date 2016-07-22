@@ -1,6 +1,6 @@
 name := "facia-purger"
 
-version := "1.0"
+version := "1.0.0"
 
 scalaVersion := "2.11.8"
 
@@ -20,9 +20,14 @@ libraryDependencies ++= Seq(
 
 enablePlugins(RiffRaffArtifact, UniversalPlugin)
 
-riffRaffPackageType := (packageZipTarball in Universal).value
+packageName in Universal := normalizedName.value
+topLevelDirectory in Universal := Some(normalizedName.value)
 
+riffRaffPackageType := (packageBin in Universal).value
 def env(key: String): Option[String] = Option(System.getenv(key))
 riffRaffBuildIdentifier := env("TRAVIS_BUILD_NUMBER").getOrElse("DEV")
+riffRaffManifestBranch := env("TRAVIS_BRANCH").getOrElse(git.gitCurrentBranch.value)
+riffRaffManifestProjectName := "dotcom:lambda:facia-purger"
+
 riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 riffRaffUploadManifestBucket := Option("riffraff-builds")
