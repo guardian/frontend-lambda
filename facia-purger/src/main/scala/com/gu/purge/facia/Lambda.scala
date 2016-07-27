@@ -26,7 +26,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
     log.debug(s"Processing ${entities.size} updated entities ...")
 
     entities.forall { entity =>
-      new ParseS3Path(stage, entity.getObject.getKey)
+      new FrontsS3PathParser(stage, entity.getObject.getKey)
         .run()
         .exists(sendPurgeRequest(_, config))
     }
