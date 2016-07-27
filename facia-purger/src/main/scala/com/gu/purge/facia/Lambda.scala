@@ -11,18 +11,22 @@ import scala.collection.JavaConverters._
 class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
 
   var stage = "DEV" // TODO
-  private lazy val config = Config.load(stage)
   private lazy val httpClient = new OkHttpClient()
 
   override def handleRequest(event: S3Event, context: Context) = {
     log.debug(s"Facia-purger lambda starting up")
+    val config = Config.load(stage)
 
+    processEntities(event, config)
+  }
+
+  def processEntities(event: S3Event, config: Config) = {
     val entities: List[S3Entity] = event.getRecords.asScala.map(_.getS3).toList
 
     log.debug(s"Processing ${entities.size} updated entities ...")
 
     entities.forall { entity =>
-      new ParseS3Path(stage, entity.getObject.getKey).run().map(sendPurgeRequest).isDefined
+      new ParseS3Path(stage, entity.getObject.getKey).run().map(sendPurgeRequest(_, config)).isDefined
     }
   }
 
@@ -35,7 +39,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
    *
    * @return whether a piece of content was purged or not
    */
-  private def sendPurgeRequest(contentId: String): Boolean = {
+  private def sendPurgeRequest(contentId: String, config: Config): Boolean = {
     val contentPath = s"/$contentId"
     val surrogateKey = DigestUtils.md5Hex(contentPath)
     val url = s"https://api.fastly.com/service/${config.fastlyServiceId}/purge/$surrogateKey"
