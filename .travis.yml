@@ -5,7 +5,7 @@ jdk: oraclejdk8
 sudo: false
 branches:
   only:
-  - facia-purger-cloudform
+  - master
 cache:
   directories:
   - $HOME/.sbt/0.13
