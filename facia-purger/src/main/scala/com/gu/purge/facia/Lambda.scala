@@ -26,7 +26,9 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
     log.debug(s"Processing ${entities.size} updated entities ...")
 
     entities.forall { entity =>
-      new ParseS3Path(stage, entity.getObject.getKey).run().map(sendPurgeRequest(_, config)).isDefined
+      new ParseS3Path(stage, entity.getObject.getKey)
+        .run()
+        .exists(sendPurgeRequest(_, config))
     }
   }
 
@@ -57,7 +59,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
       response.code == 200
     } else {
       log.warn(s"Didn't sent purge request for content with ID [$contentId].")
-      false
+      true
     }
   }
 

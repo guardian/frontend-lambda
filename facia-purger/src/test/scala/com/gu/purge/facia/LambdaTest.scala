@@ -18,11 +18,20 @@ class LambdaTest extends FlatSpec {
   val s3 = new S3Entity("l", bucket, obj, "q")
   val record: S3EventNotificationRecord = new S3EventNotificationRecord("w", "e", "r", "2010-06-30T01:20+02:00", "y", req, resp, s3, user)
 
+  val invalidKey = "NOTDEV/frontsapy/prossed/dead/au/capi/prossed.yml"
+  val invalidObj = new S3ObjectEntity(invalidKey, 0L, "j", "k")
+  val invalidS3 = new S3Entity("l", bucket, invalidObj, "q")
+  val invalidRecord: S3EventNotificationRecord = new S3EventNotificationRecord("w", "e", "r", "2010-06-30T01:20+02:00", "y", req, resp, invalidS3, user)
+
   val mockConfig = Config("serviceId", "apiKey")
   val lambda = new Lambda()
   lambda.stage = "DEV"
 
-  "The lambda" should "complete and return true given a valid key" in {
-    lambda.processS3Event(new S3Event(List[S3EventNotificationRecord](record).asJava), mockConfig) should be(true)
+  "lambda processS3Event" should "complete and return true given a valid key" in {
+    lambda.processS3Event(new S3Event(List[S3EventNotificationRecord](record).asJava), mockConfig) should be (true)
+  }
+
+  it should "return false given an invalid key" in {
+    lambda.processS3Event(new S3Event(List[S3EventNotificationRecord](invalidRecord).asJava), mockConfig) should be (false)
   }
 }
