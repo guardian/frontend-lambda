@@ -17,10 +17,10 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
     log.debug(s"Facia-purger lambda starting up")
     val config = Config.load(stage)
 
-    processEvent(event, config)
+    processS3Event(event, config)
   }
 
-  def processEvent(event: S3Event, config: Config) = {
+  def processS3Event(event: S3Event, config: Config) = {
     val entities: List[S3Entity] = event.getRecords.asScala.map(_.getS3).toList
 
     log.debug(s"Processing ${entities.size} updated entities ...")
