@@ -9,7 +9,7 @@
         "bucket": "aws-frontend-artifacts",
         "cacheControl": "public, max-age=315360000",
         "prefixPackage": true,
-        "prefixStack": true,
+        "prefixStack": false,
         "prefixStage": true,
         "publicReadAcl": false
       }
