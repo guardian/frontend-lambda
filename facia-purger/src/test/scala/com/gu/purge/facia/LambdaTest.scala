@@ -28,10 +28,10 @@ class LambdaTest extends FlatSpec {
   lambda.stage = "DEV"
 
   "lambda processS3Event" should "complete and return true given a valid key" in {
-    lambda.processS3Event(new S3Event(List[S3EventNotificationRecord](record).asJava), mockConfig) should be (true)
+    lambda.processS3Event(new S3Event(List[S3EventNotificationRecord](record).asJava), mockConfig) should be(true)
   }
 
   it should "return false given an invalid key" in {
-    lambda.processS3Event(new S3Event(List[S3EventNotificationRecord](invalidRecord).asJava), mockConfig) should be (false)
+    lambda.processS3Event(new S3Event(List[S3EventNotificationRecord](invalidRecord).asJava), mockConfig) should be(false)
   }
 }
