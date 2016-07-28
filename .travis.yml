@@ -6,6 +6,7 @@ sudo: false
 branches:
   only:
   - master
+  - riff-raff-deploy
 cache:
   directories:
   - $HOME/.sbt/0.13
