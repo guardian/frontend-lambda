@@ -4,8 +4,7 @@ import org.parboiled2.{ Parser, ParserInput }
 
 import scala.util.Success
 
-// /aws-frontend-store/CODE/frontsapi/pressed/live/au/fapi/pressed.json
-class ParseS3Path(stage: String, val input: ParserInput) extends Parser with Logging {
+class FrontsS3PathParser(stage: String, val input: ParserInput) extends Parser with Logging {
   def prefix = rule { s"$stage/frontsapi/pressed/live/" }
   val suffix = "/fapi/pressed.json"
 
