@@ -2,7 +2,7 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Facia purger lambda",
   "Parameters": {
-    "LambdaName": {
+    "PackageName": {
       "Description": "Lambda name",
       "Type": "String",
       "Default": "facia-purger"
@@ -92,12 +92,13 @@
             "Fn::Join": [
               "/",
               [
+                "frontend",
                 { "Ref": "Stage" },
-                "lambda",
+                { "Ref": "PackageName" },
                 {
                   "Fn::Join": [
                     "",
-                    [ { "Ref": "LambdaName" }, ".jar"]
+                    [ { "Ref": "PackageName" }, ".jar"]
                   ]
                 }
               ]

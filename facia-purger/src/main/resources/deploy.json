@@ -1,0 +1,33 @@
+{
+  "defaultStacks": [
+    "frontend"
+  ],
+  "packages": {
+    "facia-purger": {
+      "type": "aws-lambda",
+      "data": {
+        "functions": {
+          "PROD": {
+            "name": "frontend-facia-purger-PROD-Lambda-1WN5JINVN30WY",
+            "filename": "facia-purger.jar"
+          }
+        },
+        "bucket": "aws-frontend-artifacts",
+        "prefixStack": true
+      }
+    }
+  },
+  "recipes": {
+    "facia-purger": {
+      "actionsBeforeApp": [
+        "facia-purger.uploadLambda",
+        "facia-purger.updateLambda"
+      ]
+    },
+    "default": {
+      "depends": [
+        "facia-purger"
+      ]
+    }
+  }
+}

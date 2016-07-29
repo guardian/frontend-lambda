@@ -4,6 +4,12 @@ import org.parboiled2.{ Parser, ParserInput }
 
 import scala.util.Success
 
+/*
+ * Parse the name of a front from the full S3 path
+ * e.g.
+ *   - DEV/frontsapi/pressed/live/au/sport/fapi/pressed.json -> au/sport
+ *   - PROD/frontsapi/pressed/live/uk/fapi/pressed.json -> uk
+ */
 class FrontsS3PathParser(stage: String, val input: ParserInput) extends Parser with Logging {
   def prefix = rule { s"$stage/frontsapi/pressed/live/" }
   val suffix = "/fapi/pressed.json"
