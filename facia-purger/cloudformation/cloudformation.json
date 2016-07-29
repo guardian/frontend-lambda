@@ -92,6 +92,7 @@
             "Fn::Join": [
               "/",
               [
+                "frontend",
                 { "Ref": "Stage" },
                 { "Ref": "PackageName" },
                 {

@@ -3,18 +3,7 @@
     "frontend"
   ],
   "packages": {
-    "s3": {
-      "type": "aws-s3",
-      "data": {
-        "bucket": "aws-frontend-artifacts",
-        "cacheControl": "public, max-age=315360000",
-        "prefixPackage": true,
-        "prefixStack": false,
-        "prefixStage": true,
-        "publicReadAcl": false
-      }
-    },
-    "lambda": {
+    "facia-purger": {
       "type": "aws-lambda",
       "data": {
         "functions": {
@@ -22,25 +11,22 @@
             "name": "frontend-facia-purger-PROD-Lambda-1WN5JINVN30WY",
             "filename": "facia-purger.jar"
           }
-        }
+        },
+        "bucket": "aws-frontend-artifacts",
+        "prefixStack": true
       }
     }
   },
   "recipes": {
-    "upload": {
+    "facia-purger": {
       "actionsBeforeApp": [
-        "s3.uploadStaticFiles"
-      ]
-    },
-    "lambda": {
-      "actionsBeforeApp": [
-        "lambda.updateLambda"
+        "facia-purger.uploadLambda",
+        "facia-purger.updateLambda"
       ]
     },
     "default": {
       "depends": [
-        "upload",
-        "lambda"
+        "facia-purger"
       ]
     }
   }
