@@ -8,7 +8,7 @@
       "data": {
         "functions": {
           "PROD": {
-            "name": "frontend-facia-purger-PROD-Lambda-1WN5JINVN30WY",
+            "name": "facia-purger-lambda-PROD-Lambda-190WIIV8979JL",
             "filename": "facia-purger.jar"
           }
         },
