@@ -115,7 +115,62 @@
           ]
         },
         "Runtime": "java8",
-        "Timeout": 20
+        "Timeout": 30
+      }
+    },
+    "NotificationTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "Subscription": [ {
+          "Protocol": "email",
+          "Endpoint": "dotcom.platform@guardian.co.uk"
+        } ]
+      }
+    },
+    "InvocationAlarm": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmActions": [
+          { "Ref": "NotificationTopic" }
+        ],
+        "AlarmDescription": "Notify topic if there are no invocations over last 5 minutes",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "FunctionName",
+            "Value": { "Ref": "Lambda" }
+          }
+        ],
+        "EvaluationPeriods": "1",
+        "MetricName": "Invocations",
+        "Namespace": "AWS/Lambda",
+        "Period": "300",
+        "Statistic": "Sum",
+        "Threshold": "0",
+        "Unit": "Count"
+      }
+    },
+    "ErrorAlarm": {
+      "Type" : "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmActions": [
+          { "Ref": "NotificationTopic" }
+        ],
+        "AlarmDescription": "Notify topic if there are more than 20 errors over last 5 minutes",
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "FunctionName",
+            "Value": { "Ref": "Lambda" }
+          }
+        ],
+        "EvaluationPeriods": "1",
+        "MetricName": "Errors",
+        "Namespace": "AWS/Lambda",
+        "Period": "300",
+        "Statistic": "Sum",
+        "Threshold": "20",
+        "Unit": "Count"
       }
     }
   }
