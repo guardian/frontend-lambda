@@ -19,6 +19,10 @@
     "DeployBucket": {
       "Description": "Bucket where RiffRaff uploads artifacts on deploy",
       "Type": "String"
+    },
+    "EmailRecipient": {
+      "Description": "The email address to send alarm notifications to",
+      "Type": "String"
     }
   },
   "Resources": {
@@ -115,7 +119,62 @@
           ]
         },
         "Runtime": "java8",
-        "Timeout": 20
+        "Timeout": 30
+      }
+    },
+    "NotificationTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "Subscription": [ {
+          "Protocol": "email",
+          "Endpoint": { "Ref": "EmailRecipient" }
+        } ]
+      }
+    },
+    "InvocationAlarm": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "InsufficientDataActions": [
+          { "Ref": "NotificationTopic" }
+        ],
+        "AlarmDescription": "Notify if there are less than 5 invocations over last 5 minutes or there is insufficient data (i.e. no invocations)",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "FunctionName",
+            "Value": { "Ref": "Lambda" }
+          }
+        ],
+        "EvaluationPeriods": "1",
+        "MetricName": "Invocations",
+        "Namespace": "AWS/Lambda",
+        "Period": "3600",
+        "Statistic": "Sum",
+        "Threshold": "0",
+        "Unit": "Count"
+      }
+    },
+    "ErrorAlarm": {
+      "Type" : "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmActions": [
+          { "Ref": "NotificationTopic" }
+        ],
+        "AlarmDescription": "Notify if there are more than 20 errors over last 5 minutes",
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "FunctionName",
+            "Value": { "Ref": "Lambda" }
+          }
+        ],
+        "EvaluationPeriods": "1",
+        "MetricName": "Errors",
+        "Namespace": "AWS/Lambda",
+        "Period": "300",
+        "Statistic": "Sum",
+        "Threshold": "20",
+        "Unit": "Count"
       }
     }
   }
