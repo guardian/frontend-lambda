@@ -19,6 +19,10 @@
     "DeployBucket": {
       "Description": "Bucket where RiffRaff uploads artifacts on deploy",
       "Type": "String"
+    },
+    "NotificationRecipient": {
+      "Description": "The email address to send alarm notifications to",
+      "Type": "String"
     }
   },
   "Resources": {
@@ -123,7 +127,7 @@
       "Properties": {
         "Subscription": [ {
           "Protocol": "email",
-          "Endpoint": "dotcom.platform@guardian.co.uk"
+          "Endpoint": { "Ref": "NotificationRecipient" }
         } ]
       }
     },
@@ -137,7 +141,7 @@
           { "Ref": "NotificationTopic" }
         ],
         "AlarmDescription": "Notify if there are less than 5 invocations over last 5 minutes or there is insufficient data (i.e. no invocations)",
-        "ComparisonOperator": "LessThanThreshold",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
         "Dimensions": [
           {
             "Name": "FunctionName",
@@ -147,9 +151,9 @@
         "EvaluationPeriods": "1",
         "MetricName": "Invocations",
         "Namespace": "AWS/Lambda",
-        "Period": "300",
+        "Period": "3600",
         "Statistic": "Sum",
-        "Threshold": "5",
+        "Threshold": "1",
         "Unit": "Count"
       }
     },
