@@ -133,8 +133,11 @@
         "AlarmActions": [
           { "Ref": "NotificationTopic" }
         ],
-        "AlarmDescription": "Notify topic if there are no invocations over last 5 minutes",
-        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "InsufficientDataActions": [
+          { "Ref": "NotificationTopic" }
+        ],
+        "AlarmDescription": "Notify if there are less than 5 invocations over last 5 minutes or there is insufficient data (i.e. no invocations)",
+        "ComparisonOperator": "LessThanThreshold",
         "Dimensions": [
           {
             "Name": "FunctionName",
@@ -146,7 +149,7 @@
         "Namespace": "AWS/Lambda",
         "Period": "300",
         "Statistic": "Sum",
-        "Threshold": "0",
+        "Threshold": "5",
         "Unit": "Count"
       }
     },
@@ -156,7 +159,7 @@
         "AlarmActions": [
           { "Ref": "NotificationTopic" }
         ],
-        "AlarmDescription": "Notify topic if there are more than 20 errors over last 5 minutes",
+        "AlarmDescription": "Notify if there are more than 20 errors over last 5 minutes",
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
         "Dimensions": [
           {
