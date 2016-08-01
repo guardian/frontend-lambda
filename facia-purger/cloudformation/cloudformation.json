@@ -20,7 +20,7 @@
       "Description": "Bucket where RiffRaff uploads artifacts on deploy",
       "Type": "String"
     },
-    "NotificationRecipient": {
+    "EmailRecipient": {
       "Description": "The email address to send alarm notifications to",
       "Type": "String"
     }
@@ -127,16 +127,13 @@
       "Properties": {
         "Subscription": [ {
           "Protocol": "email",
-          "Endpoint": { "Ref": "NotificationRecipient" }
+          "Endpoint": { "Ref": "EmailRecipient" }
         } ]
       }
     },
     "InvocationAlarm": {
       "Type": "AWS::CloudWatch::Alarm",
       "Properties": {
-        "AlarmActions": [
-          { "Ref": "NotificationTopic" }
-        ],
         "InsufficientDataActions": [
           { "Ref": "NotificationTopic" }
         ],
@@ -153,7 +150,7 @@
         "Namespace": "AWS/Lambda",
         "Period": "3600",
         "Statistic": "Sum",
-        "Threshold": "1",
+        "Threshold": "0",
         "Unit": "Count"
       }
     },
