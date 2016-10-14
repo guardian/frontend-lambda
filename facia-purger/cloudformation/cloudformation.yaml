@@ -78,7 +78,7 @@ Resources:
                                     - .jar
             Description: Purge fastly after a facia change event from an S3 bucket
             Handler: com.gu.purge.facia.Lambda
-            MemorySize: 256
+            MemorySize: 512
             Role:
                 "Fn::GetAtt":
                     - ExecutionRole
