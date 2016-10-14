@@ -43,14 +43,6 @@ Resources:
                                 - logs:PutLogEvents
                             Resource: arn:aws:logs:*:*:*
                 -
-                    PolicyName: lambda
-                    PolicyDocument:
-                        Statement:
-                            Effect: Allow
-                            Action:
-                                - lambda:InvokeFunction
-                            Resource: "*"
-                -
                     PolicyName: s3
                     PolicyDocument:
                         Statement:
