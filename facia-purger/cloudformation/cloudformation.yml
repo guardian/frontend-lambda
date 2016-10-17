@@ -24,32 +24,29 @@ Resources:
         Properties:
             AssumeRolePolicyDocument:
                 Statement:
-                    -
-                        Effect: Allow
-                        Principal:
-                            Service:
-                                - lambda.amazonaws.com
-                        Action: sts:AssumeRole
+                    - Effect: Allow
+                      Principal:
+                          Service:
+                              - lambda.amazonaws.com
+                      Action: sts:AssumeRole
             Path: /
             Policies:
-                -
-                    PolicyName: logs
-                    PolicyDocument:
-                        Statement:
-                            Effect: Allow
-                            Action:
-                                - logs:CreateLogGroup
-                                - logs:CreateLogStream
-                                - logs:PutLogEvents
-                            Resource: arn:aws:logs:*:*:*
-                -
-                    PolicyName: s3
-                    PolicyDocument:
-                        Statement:
-                            Effect: Allow
-                            Action:
-                                - s3:GetObject
-                            Resource: arn:aws:s3:::aws-frontend-store/*
+                - PolicyName: logs
+                  PolicyDocument:
+                      Statement:
+                          Effect: Allow
+                          Action:
+                              - logs:CreateLogGroup
+                              - logs:CreateLogStream
+                              - logs:PutLogEvents
+                          Resource: arn:aws:logs:*:*:*
+                - PolicyName: s3
+                  PolicyDocument:
+                      Statement:
+                          Effect: Allow
+                          Action:
+                              - s3:GetObject
+                          Resource: arn:aws:s3:::aws-frontend-store/*
     Lambda:
         Type: AWS::Lambda::Function
         Properties:
@@ -59,15 +56,13 @@ Resources:
                 S3Key:
                     "Fn::Join":
                         - /
-                        -
-                            - frontend
-                            - Ref: Stage
-                            - Ref: PackageName
-                            - "Fn::Join":
-                                - ""
-                                -
-                                    - Ref: PackageName
-                                    - .jar
+                        - - frontend
+                          - Ref: Stage
+                          - Ref: PackageName
+                          - "Fn::Join":
+                              - ""
+                              - - Ref: PackageName
+                                - .jar
             Description: Purge fastly after a facia change event from an S3 bucket
             Handler: com.gu.purge.facia.Lambda
             MemorySize: 512
@@ -81,10 +76,9 @@ Resources:
         Type: AWS::SNS::Topic
         Properties:
             Subscription:
-                -
-                    Protocol: email
-                    Endpoint:
-                        Ref: EmailRecipient
+                - Protocol: email
+                  Endpoint:
+                      Ref: EmailRecipient
     InvocationAlarm:
         Type: AWS::CloudWatch::Alarm
         Properties:
@@ -93,10 +87,9 @@ Resources:
             AlarmDescription: Notify if there are less than 5 invocations over last 5 minutes or there is insufficient data (i.e. no invocations)
             ComparisonOperator: LessThanOrEqualToThreshold
             Dimensions:
-                -
-                    Name: FunctionName
-                    Value:
-                        Ref: Lambda
+                - Name: FunctionName
+                  Value:
+                      Ref: Lambda
             EvaluationPeriods: 1
             MetricName: Invocations
             Namespace: AWS/Lambda
@@ -112,10 +105,9 @@ Resources:
             AlarmDescription: Notify if there are more than 20 errors over last 5 minutes
             ComparisonOperator: GreaterThanOrEqualToThreshold
             Dimensions:
-                -
-                    Name: FunctionName
-                    Value:
-                        Ref: Lambda
+                - Name: FunctionName
+                  Value:
+                      Ref: Lambda
             EvaluationPeriods: 1
             MetricName: Errors
             Namespace: AWS/Lambda
