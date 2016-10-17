@@ -1,0 +1,117 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Facia purger lambda
+Parameters:
+    PackageName:
+        Description: Lambda name
+        Type: String
+        Default: facia-purger
+    Stage:
+        Description: Stage name
+        Type: String
+        AllowedValues:
+            - CODE
+            - PROD
+        Default: CODE
+    DeployBucket:
+        Description: Bucket where RiffRaff uploads artifacts on deploy
+        Type: String
+    EmailRecipient:
+        Description: The email address to send alarm notifications to
+        Type: String
+Resources:
+    ExecutionRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service:
+                              - lambda.amazonaws.com
+                      Action: sts:AssumeRole
+            Path: /
+            Policies:
+                - PolicyName: logs
+                  PolicyDocument:
+                      Statement:
+                          Effect: Allow
+                          Action:
+                              - logs:CreateLogGroup
+                              - logs:CreateLogStream
+                              - logs:PutLogEvents
+                          Resource: arn:aws:logs:*:*:*
+                - PolicyName: s3
+                  PolicyDocument:
+                      Statement:
+                          Effect: Allow
+                          Action:
+                              - s3:GetObject
+                          Resource: arn:aws:s3:::aws-frontend-store/*
+    Lambda:
+        Type: AWS::Lambda::Function
+        Properties:
+            Code:
+                S3Bucket:
+                    Ref: DeployBucket
+                S3Key:
+                    "Fn::Join":
+                        - /
+                        - - frontend
+                          - Ref: Stage
+                          - Ref: PackageName
+                          - "Fn::Join":
+                              - ""
+                              - - Ref: PackageName
+                                - .jar
+            Description: Purge fastly after a facia change event from an S3 bucket
+            Handler: com.gu.purge.facia.Lambda
+            MemorySize: 512
+            Role:
+                "Fn::GetAtt":
+                    - ExecutionRole
+                    - Arn
+            Runtime: java8
+            Timeout: 30
+    NotificationTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            Subscription:
+                - Protocol: email
+                  Endpoint:
+                      Ref: EmailRecipient
+    InvocationAlarm:
+        Type: AWS::CloudWatch::Alarm
+        Properties:
+            InsufficientDataActions:
+                - Ref: NotificationTopic
+            AlarmDescription: Notify if there are less than 5 invocations over last 5 minutes or there is insufficient data (i.e. no invocations)
+            ComparisonOperator: LessThanOrEqualToThreshold
+            Dimensions:
+                - Name: FunctionName
+                  Value:
+                      Ref: Lambda
+            EvaluationPeriods: 1
+            MetricName: Invocations
+            Namespace: AWS/Lambda
+            Period: 3600
+            Statistic: Sum
+            Threshold: 0
+            Unit: Count
+    ErrorAlarm:
+        Type: AWS::CloudWatch::Alarm
+        Properties:
+            AlarmActions:
+                - Ref: NotificationTopic
+            AlarmDescription: Notify if there are more than 20 errors over last 5 minutes
+            ComparisonOperator: GreaterThanOrEqualToThreshold
+            Dimensions:
+                - Name: FunctionName
+                  Value:
+                      Ref: Lambda
+            EvaluationPeriods: 1
+            MetricName: Errors
+            Namespace: AWS/Lambda
+            Period: 300
+            Statistic: Sum
+            Threshold: 20
+            Unit: Count
