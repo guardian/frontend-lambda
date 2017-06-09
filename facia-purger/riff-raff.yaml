@@ -1,0 +1,16 @@
+stacks:
+- frontend
+regions:
+- eu-west-1
+deployments:
+  facia-purger:
+    type: aws-lambda
+    parameters:
+      bucket: aws-frontend-artifacts
+      functions:
+        PROD:
+          name: facia-purger-lambda-PROD-Lambda-190WIIV8979JL
+          filename: facia-purger.jar
+        CODE:
+          name: facia-purger-lambda-CODE-Lambda-1AI0OAR4BOJDC
+          filename: facia-purger.jar
