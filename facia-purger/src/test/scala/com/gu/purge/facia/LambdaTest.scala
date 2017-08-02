@@ -9,7 +9,7 @@ import org.scalatest.Matchers._
 
 class LambdaTest extends FlatSpec {
 
-  val key = "DEV/frontsapi/pressed/live/au/fapi/pressed.json"
+  val key = "DEV/frontsapi/pressed/live/au/fapi/pressed.v2.json"
   val req = new RequestParametersEntity("a")
   val resp = new ResponseElementsEntity("s", "d")
   val user = new UserIdentityEntity("f")
