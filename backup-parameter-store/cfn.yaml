@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Backs up parameter store properties. To be executed on an interval
+
+Parameters:
+  Stack:
+    Description: Stack name
+    Type: String
+    Default: frontend
+  App:
+    Description: Application name
+    Type: String
+    Default: backup-parameter-store
+  Stage:
+    Description: Stage name
+    Type: String
+    Default: CODE
+  DeployBucket:
+    Description: Bucket where RiffRaff uploads artifacts on deploy
+    Type: String
+    Default: aws-frontend-artifacts
+
+
+Resources:
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: logs
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: arn:aws:logs:*:*:*
+        - PolicyName: lambda
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource: "*"
+        - PolicyName: BackupFrontendParameterStorePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Resource: arn:aws:kms:eu-west-1:642631414762:key/5cdbda67-5d1f-458f-9984-cb82d0b18043
+              Effect: Allow
+              Action:
+              - kms:Encrypt
+              - kms:Decrypt
+              - kms:ReEncrypt*
+              - kms:GenerateDataKey*
+              - kms:DescribeKey
+            - Resource:
+              - arn:aws:ssm:eu-west-1:642631414762:parameter/frontend/*
+              - arn:aws:ssm:eu-west-1:642631414762:parameter/frontend
+              Effect: Allow
+              Action:
+                - ssm:GetParameter
+                - ssm:GetParametersByPath
+                - ssm:GetParameters
+            - Resource: arn:aws:s3:::aws-frontend-backup/config/*
+              Effect: Allow
+              Action:
+                - s3:Put*
+
+
+  Lambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key: !Sub ${Stack}/${Stage}/${App}/${App}.jar
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          Stack: !Ref Stack
+          App: !Ref App
+      Description: Backs up parameter store properties. To be executed on an interval
+      Handler: com.gu.backupparameterstore.Lambda::handler
+      MemorySize: 256
+      Role: !GetAtt ExecutionRole.Arn
+      Runtime: java8
+      Timeout: 300
+
+
+
+  DailyEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Execute regularly
+      ScheduleExpression: cron(0 0 * * ? *)
+      Targets:
+        - Id: Lambda
+          Arn: !GetAtt Lambda.Arn
+
+
+
+  DailyEventLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt Lambda.Arn
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt DailyEvent.Arn
