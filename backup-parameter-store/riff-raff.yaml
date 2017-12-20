@@ -1,0 +1,24 @@
+stacks: [frontend]
+regions: [eu-west-1]
+
+deployments:
+  backup-parameter-store:
+    type: aws-lambda
+    parameters:
+      bucket: aws-frontend-artifacts
+      fileName: backup-parameter-store.jar
+      functions:
+        PROD:
+          name: DOES_NOT_EXIST_YET
+          filename: backup-parameter-store.jar
+        CODE:
+          name: DOES_NOT_EXIST_YET
+          filename: backup-parameter-store.jar
+    dependencies: [backup-parameter-store-cfn]
+  backup-parameter-store-cfn:
+    type: cloud-formation
+    app: backup-parameter-store
+    parameters:
+      prependStackToCloudFormationStackName: false
+      cloudFormationStackName: backup-parameter-store
+      templatePath: cfn.yaml
