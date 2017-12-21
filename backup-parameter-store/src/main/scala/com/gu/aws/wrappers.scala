@@ -37,7 +37,7 @@ class ParameterStore {
   def getPath(path: String, isRecursiveSearch: Boolean = false): Map[String, String] = {
 
     @tailrec
-    def pagination(accum: Map[String, String], nextToken: Option[String]): Map[String, String] = {
+    def paginate(accum: Map[String, String], nextToken: Option[String]): Map[String, String] = {
 
       val parameterRequest = new GetParametersByPathRequest()
         .withWithDecryption(true)
@@ -53,12 +53,12 @@ class ParameterStore {
       }.toMap
 
       Option(result.getNextToken) match {
-        case Some(next) => pagination(accum ++ resultMap, Some(next))
+        case Some(next) => paginate(accum ++ resultMap, Some(next))
         case None => accum ++ resultMap
       }
     }
 
-    pagination(Map.empty, None)
+    paginate(Map.empty, None)
   }
 }
 
