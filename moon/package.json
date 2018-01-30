@@ -1,8 +1,8 @@
 {
   "name": "moon",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Moon rendering lambda",
+  "main": "lambda/render.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "lambda-local -l lambda/render.js -h handler -e examples/event.json"
