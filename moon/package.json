@@ -1,0 +1,19 @@
+{
+  "name": "moon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lambda-local -l lambda/render.js -h handler -e examples/event.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "lambda-local": "^1.4.5"
+  },
+  "dependencies": {
+    "pify": "^3.0.0"
+  }
+}
