@@ -53,7 +53,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
       .post(EmptyJsonBody)
       .build()
 
-    if (stage == "PROD") {
+    if (stage == "PROD" || stage =="CODE") {
       val response = httpClient.newCall(request).execute()
       log.info(s"Sent purge request for content with ID [$contentId]. Response from Fastly API: [${response.code}] [${response.body.string}]")
       response.code == 200
