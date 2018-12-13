@@ -4,7 +4,7 @@ import java.util.Properties
 
 import scala.util.Try
 import com.amazonaws.auth.profile._
-import com.amazonaws.auth.{AWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, InstanceProfileCredentialsProvider, SystemPropertiesCredentialsProvider}
+import com.amazonaws.auth.{ AWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, InstanceProfileCredentialsProvider, SystemPropertiesCredentialsProvider }
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3Client
 
