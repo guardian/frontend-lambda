@@ -12,6 +12,12 @@ Parameters:
             - CODE
             - PROD
         Default: CODE
+    FastlyServiceId:
+        Description: Id of service to purge
+        Type: String
+    FastlyAPIKey:
+        Description: API key with purge writes for service with id FastlyServiceId
+        Type: String
     DeployBucket:
         Description: Bucket where RiffRaff uploads artifacts on deploy
         Type: String
@@ -75,6 +81,8 @@ Resources:
             Environment:
                 Variables:
                     Stage: !Ref Stage
+                    FastlyAPIKey: !Ref FastlyAPIKey
+                    FastlyServiceId: !Ref FastlyServiceId
     NotificationTopic:
         Type: AWS::SNS::Topic
         Properties:
