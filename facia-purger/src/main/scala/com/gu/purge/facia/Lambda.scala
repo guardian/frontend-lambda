@@ -10,7 +10,7 @@ import scala.collection.JavaConverters._
 
 class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
 
-  var stage = Option(System.getenv("Stage")).getOrElse("PROD")
+  var stage = Option(System.getenv("Stage")).getOrElse("DEV")
   private lazy val httpClient = new OkHttpClient()
 
   override def handleRequest(event: S3Event, context: Context) = {
