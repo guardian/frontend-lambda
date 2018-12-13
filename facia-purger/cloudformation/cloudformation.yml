@@ -72,6 +72,9 @@ Resources:
                     - Arn
             Runtime: java8
             Timeout: 30
+            Environment:
+                Variables:
+                    Stage: !Ref Stage
     NotificationTopic:
         Type: AWS::SNS::Topic
         Properties:
