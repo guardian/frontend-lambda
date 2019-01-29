@@ -20,9 +20,10 @@ class FrontsS3PathParser(stage: String, val input: ParserInput) extends Parser w
 
   def run(): Option[String] = expr.run() match {
     case Success(matched) => Some(matched)
-    case x =>
+    case x => {
       log.error(s"error: $x, input: ${input.toString}")
       None
+    }
   }
 }
 
