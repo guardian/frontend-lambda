@@ -10,7 +10,7 @@ import scala.collection.JavaConverters._
 
 class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
 
-  var stage = "PROD"
+  var stage = Option(System.getenv("Stage")).getOrElse("DEV")
   private lazy val httpClient = new OkHttpClient()
 
   override def handleRequest(event: S3Event, context: Context) = {
@@ -26,6 +26,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
     log.debug(s"Processing ${entities.size} updated entities ...")
 
     entities.forall { entity =>
+      log.info(s"debug path log: ${entity.getObject.getKey}" )
       new FrontsS3PathParser(stage, entity.getObject.getKey)
         .run()
         .exists(sendPurgeRequest(_, config))
@@ -53,7 +54,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
       .post(EmptyJsonBody)
       .build()
 
-    if (stage == "PROD" || stage =="CODE") {
+    if (stage == "PROD" || stage == "CODE") {
       val response = httpClient.newCall(request).execute()
       log.info(s"Sent purge request for content with ID [$contentId]. Response from Fastly API: [${response.code}] [${response.body.string}]")
       response.code == 200
