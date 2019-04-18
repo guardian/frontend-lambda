@@ -85,6 +85,10 @@ Resources:
           Stage: !Ref Stage
           FastlyAPIKey: !Ref FastlyAPIKey
           FastlyServiceId: !Ref FastlyServiceId
+      VpcConfig:
+        SubnetIds: !Ref PrivateSubnets
+        SecurityGroupIds:
+          - !Ref LambdaSecurityGroup
   NotificationTopic:
     Type: AWS::SNS::Topic
     Properties:
