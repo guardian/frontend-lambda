@@ -6,8 +6,9 @@ deployments:
   cloudformation:
     type: cloud-formation
     app: facia-purger
-    cloudFormationStackName: facia-purger-lambda
-    appendStageToCloudFormationStackName: true
+    parameters:
+      cloudFormationStackName: facia-purger-lambda
+      appendStageToCloudFormationStackName: true
   facia-purger:
     type: aws-lambda
     parameters:
