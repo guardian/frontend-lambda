@@ -5,9 +5,10 @@ regions:
 deployments:
   cloudformation:
     type: cloud-formation
-    app: facia-purger
+    app: facia-purger-lambda
     parameters:
       appendStageToCloudFormationStackName: true
+      prependStackToCloudFormationStackName: false
       cloudFormationStackName: facia-purger-lambda
       templatePath: cloudformation.yml
   facia-purger:
