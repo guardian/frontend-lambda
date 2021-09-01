@@ -20,6 +20,9 @@ def env(key: String): Option[String] = Option(System.getenv(key))
 
 lazy val root = (project in file(".")).enablePlugins(RiffRaffArtifact)
 
+lazy val faciaPurgerFiles = settingKey[Seq[(File, String)]]("Facia Purger files")
+faciaPurgerFiles := ((baseDirectory.value / "src") ** "*") pair rebase(baseDirectory.value / "src", "facia-purger")
+
 riffRaffPackageName := "facia-purger"
 riffRaffPackageType := assembly.value
 riffRaffUploadArtifactBucket := Option("riffraff-artifact")
@@ -31,4 +34,4 @@ riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}"
 riffRaffArtifactResources := Seq(
   baseDirectory.value / "cloudformation.yml" -> "cloudformation/cloudformation.yml",
   baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml"
-)
+) ++ faciaPurgerFiles.value
