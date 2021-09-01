@@ -28,4 +28,4 @@ assemblyJarName := normalizedName.value + ".jar"
 riffRaffBuildIdentifier := env("BUILD_NUMBER").getOrElse("DEV")
 riffRaffManifestBranch := env("BUILD_VCS_BRANCH").getOrElse(git.gitCurrentBranch.value)
 riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}"
-riffRaffArtifactResources := Seq(file("./cloudformation.yaml") -> "cloudformation/cloudformation.yaml")
+riffRaffArtifactResources := Seq(baseDirectory.value / "cloudformation.yml" -> "cloudformation/cloudformation.yml")
