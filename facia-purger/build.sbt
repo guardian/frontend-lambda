@@ -35,5 +35,5 @@ riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}"
 riffRaffArtifactResources := Seq(
   baseDirectory.value / "cloudformation.yml" -> "cloudformation/cloudformation.yml",
   baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml",
-  file("./target/scala-2.11/facia-purger.jar") -> "facia-purger/facia-purger.jar"
+  assembly.value -> "facia-purger/facia-purger.jar"
 )
