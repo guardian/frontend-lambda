@@ -14,8 +14,8 @@ libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-lambda-java-log4j" % "1.0.0",
   "org.scalatest" %% "scalatest" % "2.2.2" % "test",
   "org.mockito" % "mockito-all" % "1.9.5" % "test"
-)
-
+  )
+  
 def env(key: String): Option[String] = Option(System.getenv(key))
 
 lazy val root = (project in file("."))
@@ -27,5 +27,10 @@ lazy val root = (project in file("."))
     riffRaffManifestBranch := env("BUILD_VCS_BRANCH").getOrElse(git.gitCurrentBranch.value),
     riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}",
     riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
-    riffRaffUploadManifestBucket := Option("riffraff-builds")
+    riffRaffUploadManifestBucket := Option("riffraff-builds"),
+    riffRaffArtifactResources := Seq(
+      riffRaffPackageType.value -> s"${normalizedName.value}/${normalizedName.value}.jar",
+      baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml",
+      baseDirectory.value / "cloudformation" / "cloudformation.yaml" -> s"cloudformation/cloudformation.yaml"
+    )
 )
