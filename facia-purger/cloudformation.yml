@@ -15,22 +15,28 @@ Parameters:
   FastlyServiceId:
     Description: Id of service to purge
     Type: String
+    Default: 7gTa6u8qGRavwo5hcv56ca
   FastlyAPIKey:
     Description: API key with purge writes for service with id FastlyServiceId
     Type: String
     NoEcho: true
+    Default: API_KEY
   DeployBucket:
     Description: Bucket where RiffRaff uploads artifacts on deploy
     Type: String
+    Default: aws-frontend-artifacts	
   EmailRecipient:
     Description: The email address to send alarm notifications to
     Type: String
+    Default: dotcom.platform@guardian.co.uk	
   PrivateSubnets:
     Type: List<AWS::EC2::Subnet::Id>
     Description: Private subnets of vpc
+    Default: PRIVATE_SUBNET
   VPC:
     Type: AWS::EC2::VPC::Id
     Description: VPC to deploy into
+    Default: VPC_ID
 Resources:
   ExecutionRole:
     Type: AWS::IAM::Role
