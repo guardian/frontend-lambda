@@ -9,7 +9,7 @@ deployments:
     parameters:
       appendStageToCloudFormationStackName: true
       cloudFormationStackName: facia-purger-lambda
-      templatePath: cloudformation.yaml
+      templatePath: cloudformation.yml
   facia-purger:
     type: aws-lambda
     parameters:
