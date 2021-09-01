@@ -18,19 +18,14 @@ libraryDependencies ++= Seq(
   
 def env(key: String): Option[String] = Option(System.getenv(key))
 
-lazy val root = (project in file("."))
-  .enablePlugins(RiffRaffArtifact)
-  .settings(
-    assemblyJarName := normalizedName.value + ".jar",
-    riffRaffPackageType := assembly.value,
-    riffRaffBuildIdentifier := env("BUILD_NUMBER").getOrElse("DEV"),
-    riffRaffManifestBranch := env("BUILD_VCS_BRANCH").getOrElse(git.gitCurrentBranch.value),
-    riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}",
-    riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
-    riffRaffUploadManifestBucket := Option("riffraff-builds"),
-    riffRaffArtifactResources := Seq(
-      riffRaffPackageType.value -> s"${normalizedName.value}/${normalizedName.value}.jar",
-      baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml",
-      baseDirectory.value / "cloudformation.yaml" -> s"cloudformation/cloudformation.yaml"
-    )
-)
+lazy val root = (project in file(".")).enablePlugins(RiffRaffArtifact)
+
+riffRaffPackageName := "facia-purger"
+riffRaffPackageType := assembly.value
+riffRaffUploadArtifactBucket := Option("riffraff-artifact")
+riffRaffUploadManifestBucket := Option("riffraff-builds")
+assemblyJarName := normalizedName.value + ".jar"
+riffRaffBuildIdentifier := env("BUILD_NUMBER").getOrElse("DEV")
+riffRaffManifestBranch := env("BUILD_VCS_BRANCH").getOrElse(git.gitCurrentBranch.value)
+riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}"
+riffRaffArtifactResources += (file("./cloudformation.yaml") -> "cloudformation/cloudformation.yaml")
