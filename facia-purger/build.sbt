@@ -23,8 +23,8 @@ lazy val root = (project in file("."))
   .settings(
     assemblyJarName := normalizedName.value + ".jar",
     riffRaffPackageType := assembly.value,
-    riffRaffBuildIdentifier := env("BUILD_IDENTIFIER").getOrElse("DEV"),
-    riffRaffManifestBranch := env("BRANCH_NAME").getOrElse(git.gitCurrentBranch.value),
+    riffRaffBuildIdentifier := env("BUILD_NUMBER").getOrElse("DEV"),
+    riffRaffManifestBranch := env("BUILD_VCS_BRANCH").getOrElse(git.gitCurrentBranch.value),
     riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}",
     riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
     riffRaffUploadManifestBucket := Option("riffraff-builds")
