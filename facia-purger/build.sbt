@@ -31,6 +31,6 @@ lazy val root = (project in file("."))
     riffRaffArtifactResources := Seq(
       riffRaffPackageType.value -> s"${normalizedName.value}/${normalizedName.value}.jar",
       baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml",
-      baseDirectory.value / "cloudformation" / "cloudformation.yaml" -> s"cloudformation/cloudformation.yaml"
+      baseDirectory.value / "cloudformation.yaml" -> s"cloudformation/cloudformation.yaml"
     )
 )
