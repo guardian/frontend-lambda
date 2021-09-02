@@ -8,7 +8,6 @@ deployments:
     app: facia-purger-lambda
     parameters:
       cloudFormationStackByTags: false
-      appendStageToCloudFormationStackName: true
       prependStackToCloudFormationStackName: false
       cloudFormationStackName: facia-purger-lambda
       templatePath: cloudformation.yml
