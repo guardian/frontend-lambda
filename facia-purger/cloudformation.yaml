@@ -25,12 +25,6 @@ Parameters:
   EmailRecipient:
     Description: The email address to send alarm notifications to
     Type: String
-  PrivateSubnets:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: Private subnets of vpc
-  VPC:
-    Type: AWS::EC2::VPC::Id
-    Description: VPC to deploy into
 Resources:
   ExecutionRole:
     Type: AWS::IAM::Role
@@ -86,10 +80,6 @@ Resources:
           Stage: !Ref Stage
           FastlyAPIKey: !Ref FastlyAPIKey
           FastlyServiceId: !Ref FastlyServiceId
-      VpcConfig:
-        SubnetIds: !Ref PrivateSubnets
-        SecurityGroupIds:
-          - !Ref LambdaSecurityGroup
   NotificationTopic:
     Type: AWS::SNS::Topic
     Properties:
@@ -133,13 +123,3 @@ Resources:
       Statistic: Sum
       Threshold: 20
       Unit: Count
-  LambdaSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security group for github lambda - allow access to fastly
-      VpcId: !Ref VPC
-      SecurityGroupEgress:
-        CidrIp: 0.0.0.0/0
-        IpProtocol: tcp
-        FromPort: 443
-        ToPort: 443
