@@ -18,6 +18,7 @@ Parameters:
   FastlyAPIKey:
     Description: API key with purge writes for service with id FastlyServiceId
     Type: String
+    NoEcho: true
   DeployBucket:
     Description: Bucket where RiffRaff uploads artifacts on deploy
     Type: String

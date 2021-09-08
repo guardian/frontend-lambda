@@ -3,6 +3,14 @@ stacks:
 regions:
 - eu-west-1
 deployments:
+  cloudformation:
+    type: cloud-formation
+    app: facia-purger-lambda
+    parameters:
+      cloudFormationStackByTags: false
+      prependStackToCloudFormationStackName: false
+      cloudFormationStackName: facia-purger-lambda
+      templatePath: cloudformation.yaml
   facia-purger:
     type: aws-lambda
     parameters:
@@ -14,3 +22,5 @@ deployments:
         CODE:
           name: facia-purger-lambda-CODE-Lambda-1AI0OAR4BOJDC
           filename: facia-purger.jar
+    dependencies:
+      - cloudformation
