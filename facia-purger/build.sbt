@@ -34,7 +34,8 @@ riffRaffArtifactResources += (baseDirectory.value / "riff-raff.yaml" -> "riff-ra
 
 assembly / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.last == "Log4j2Plugins.dat" => Log4j2MergeStrategy.plugincache
-  case _                             => MergeStrategy.first
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case _                             => MergeStrategy.deduplicate
 }
 
 riffRaffPackageType := assembly.value
