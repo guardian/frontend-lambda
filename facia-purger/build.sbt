@@ -25,18 +25,18 @@ def env(key: String): Option[String] = Option(System.getenv(key))
 
 lazy val root = (project in file(".")).enablePlugins(RiffRaffArtifact)
 
-riffRaffPackageType := assembly.value
-riffRaffUploadArtifactBucket := Option("riffraff-artifact")
-riffRaffUploadManifestBucket := Option("riffraff-builds")
-assemblyJarName := normalizedName.value + ".jar"
+enablePlugins(RiffRaffArtifact)
+
+assemblyJarName := "facia-purger.jar"
 riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}"
-riffRaffArtifactResources := Seq(
-  baseDirectory.value / "cloudformation.yaml" -> "cloudformation/cloudformation.yaml",
-  baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml",
-  assembly.value -> s"${normalizedName.value}/${normalizedName.value}.jar"
-)
+riffRaffArtifactResources += (baseDirectory.value / "cloudformation.yaml" -> "cloudformation/cloudformation.yaml")
+riffRaffArtifactResources += (baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml")
 
 assembly / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.last == "Log4j2Plugins.dat" => Log4j2MergeStrategy.plugincache
   case _                             => MergeStrategy.first
 }
+
+riffRaffPackageType := assembly.value
+riffRaffUploadArtifactBucket := Option("riffraff-artifact")
+riffRaffUploadManifestBucket := Option("riffraff-builds")
