@@ -32,3 +32,8 @@ riffRaffArtifactResources := Seq(
   baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml",
   assembly.value -> s"${normalizedName.value}/${normalizedName.value}.jar"
 )
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case _                             => MergeStrategy.first
+}
