@@ -25,8 +25,6 @@ def env(key: String): Option[String] = Option(System.getenv(key))
 
 lazy val root = (project in file(".")).enablePlugins(RiffRaffArtifact)
 
-enablePlugins(RiffRaffArtifact)
-
 assemblyJarName := "facia-purger.jar"
 riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}"
 riffRaffArtifactResources += (baseDirectory.value / "cloudformation.yaml" -> "cloudformation/cloudformation.yaml")
