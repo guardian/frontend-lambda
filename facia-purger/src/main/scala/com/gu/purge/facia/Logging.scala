@@ -1,7 +1,7 @@
 package com.gu.purge.facia
 
-import org.apache.log4j.Logger
+import org.apache.logging.log4j.{ LogManager, Logger }
 
 trait Logging {
-  lazy val log: Logger = Logger.getLogger(getClass.getName)
+  lazy val log: Logger = LogManager.getLogger(getClass.getName)
 }
