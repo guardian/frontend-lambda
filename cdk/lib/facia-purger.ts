@@ -2,17 +2,43 @@ import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import { GuStack } from '@guardian/cdk/lib/constructs/core';
 import { GuLambdaFunction } from '@guardian/cdk/lib/constructs/lambda';
 import type { App } from 'aws-cdk-lib';
+import { CfnParameter } from 'aws-cdk-lib';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 
 export class FaciaPurger extends GuStack {
 	constructor(scope: App, id: string, props: GuStackProps) {
 		super(scope, id, props);
 
-		new GuLambdaFunction(this, 'faciaPurgerLambda', {
+		const fastlyServiceId = new CfnParameter(this, 'FastlyServiceId', {
+			type: 'String',
+			description: 'Id of service to purge',
+		});
+		const fastlyAPIKey = new CfnParameter(this, 'FastlyAPIKey', {
+			type: 'String',
+			description:
+				'API key with purge writes for service with id FastlyServiceId',
+			noEcho: true,
+		});
+		const emailRecipient = new CfnParameter(this, 'EmailRecipient', {
+			type: 'String',
+			description: 'The email address to send alarm notifications to',
+		});
+
+		const lambda = new GuLambdaFunction(this, 'faciaPurgerLambda', {
 			app: 'facia-purger',
 			fileName: 'facia-purger.jar',
 			runtime: Runtime.JAVA_11,
 			handler: 'com.gu.purge.facia.Lambda',
+			environment: {
+				FastlyServiceId: fastlyServiceId.valueAsString,
+				FastlyAPIKey: fastlyAPIKey.valueAsString,
+				Stage: this.stage,
+			},
+		});
+
+		this.overrideLogicalId(lambda, {
+			logicalId: 'Lambda',
+			reason: 'preserve existing triggers',
 		});
 	}
 }
