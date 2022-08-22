@@ -4,6 +4,8 @@ import { GuLambdaFunction } from '@guardian/cdk/lib/constructs/lambda';
 import type { App } from 'aws-cdk-lib';
 import { CfnParameter } from 'aws-cdk-lib';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { Topic } from 'aws-cdk-lib/aws-sns';
+import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 
 export class FaciaPurger extends GuStack {
 	constructor(scope: App, id: string, props: GuStackProps) {
@@ -24,6 +26,11 @@ export class FaciaPurger extends GuStack {
 			description: 'The email address to send alarm notifications to',
 		});
 
+		const notificationTopic = new Topic(this, 'NotificationTopic');
+		notificationTopic.addSubscription(
+			new EmailSubscription(emailRecipient.valueAsString),
+		);
+
 		const lambda = new GuLambdaFunction(this, 'faciaPurgerLambda', {
 			app: 'facia-purger',
 			fileName: 'facia-purger.jar',
@@ -33,6 +40,12 @@ export class FaciaPurger extends GuStack {
 				FastlyServiceId: fastlyServiceId.valueAsString,
 				FastlyAPIKey: fastlyAPIKey.valueAsString,
 				Stage: this.stage,
+			},
+			memorySize: 512,
+			errorPercentageMonitoring: {
+				toleratedErrorPercentage: 1,
+				numberOfMinutesAboveThresholdBeforeAlarm: 5,
+				snsTopicName: notificationTopic.topicName,
 			},
 		});
 
