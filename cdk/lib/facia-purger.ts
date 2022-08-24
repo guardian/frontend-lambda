@@ -2,7 +2,14 @@ import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import { GuStack } from '@guardian/cdk/lib/constructs/core';
 import { GuLambdaFunction } from '@guardian/cdk/lib/constructs/lambda';
 import type { App } from 'aws-cdk-lib';
-import { CfnParameter } from 'aws-cdk-lib';
+import { CfnParameter, Duration } from 'aws-cdk-lib';
+import {
+	Alarm,
+	ComparisonOperator,
+	TreatMissingData,
+	Unit,
+} from 'aws-cdk-lib/aws-cloudwatch';
+import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
@@ -53,5 +60,22 @@ export class FaciaPurger extends GuStack {
 			logicalId: 'Lambda',
 			reason: 'preserve existing triggers',
 		});
+
+		const invocationAlarm = new Alarm(this, 'invacationAlarm', {
+			alarmDescription:
+				'Notify if there are less than 5 invocations over last 10 minutes or there is insufficient data (i.e. no invocations)',
+			comparisonOperator: ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+			threshold: 5,
+			evaluationPeriods: 1,
+			actionsEnabled: true,
+			treatMissingData: TreatMissingData.BREACHING,
+			metric: lambda.metricInvocations({
+				period: Duration.minutes(10),
+				statistic: 'Sum',
+				unit: Unit.COUNT,
+			}),
+		});
+
+		invocationAlarm.addAlarmAction(new SnsAction(notificationTopic));
 	}
 }
