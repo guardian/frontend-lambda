@@ -23,7 +23,7 @@ jobs:
           distribution: "corretto"
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version-file: "./cdk/.nvmrc"
       - working-directory: ./cdk
         run: |
           npm ci
