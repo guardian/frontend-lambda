@@ -2,12 +2,11 @@
 
 exports[`The FaciaPurger stack matches the snapshot 1`] = `
 Object {
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Facia purger lambda",
   "Parameters": Object {
-    "DeployBucket": Object {
-      "Description": "Bucket where RiffRaff uploads artifacts on deploy",
-      "Type": "String",
+    "DistributionBucketName": Object {
+      "Default": "/account/services/artifact.bucket",
+      "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
+      "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "EmailRecipient": Object {
       "Description": "The email address to send alarm notifications to",
@@ -22,186 +21,48 @@ Object {
       "Description": "Id of service to purge",
       "Type": "String",
     },
-    "PackageName": Object {
-      "Default": "facia-purger",
-      "Description": "Lambda name",
-      "Type": "String",
-    },
-    "Stage": Object {
-      "AllowedValues": Array [
-        "CODE",
-        "PROD",
-      ],
-      "Default": "CODE",
-      "Description": "Stage name",
-      "Type": "String",
-    },
   },
   "Resources": Object {
-    "ErrorAlarm": Object {
-      "Properties": Object {
-        "AlarmActions": Array [
-          Object {
-            "Ref": "NotificationTopic",
-          },
-        ],
-        "AlarmDescription": "Notify if there are more than 20 errors over last 5 minutes",
-        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
-        "Dimensions": Array [
-          Object {
-            "Name": "FunctionName",
-            "Value": Object {
-              "Ref": "Lambda",
-            },
-          },
-        ],
-        "EvaluationPeriods": 1,
-        "MetricName": "Errors",
-        "Namespace": "AWS/Lambda",
-        "Period": 300,
-        "Statistic": "Sum",
-        "Threshold": 20,
-        "Unit": "Count",
-      },
-      "Type": "AWS::CloudWatch::Alarm",
-    },
-    "ExecutionRole": Object {
-      "Properties": Object {
-        "AssumeRolePolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": Object {
-                "Service": Array [
-                  "lambda.amazonaws.com",
-                ],
-              },
-            },
-          ],
-        },
-        "Path": "/",
-        "Policies": Array [
-          Object {
-            "PolicyDocument": Object {
-              "Statement": Object {
-                "Action": Array [
-                  "logs:CreateLogGroup",
-                  "logs:CreateLogStream",
-                  "logs:PutLogEvents",
-                ],
-                "Effect": "Allow",
-                "Resource": "arn:aws:logs:*:*:*",
-              },
-            },
-            "PolicyName": "logs",
-          },
-          Object {
-            "PolicyDocument": Object {
-              "Statement": Object {
-                "Action": Array [
-                  "s3:GetObject",
-                ],
-                "Effect": "Allow",
-                "Resource": "arn:aws:s3:::aws-frontend-store/*",
-              },
-            },
-            "PolicyName": "s3",
-          },
-          Object {
-            "PolicyDocument": Object {
-              "Statement": Object {
-                "Action": Array [
-                  "ec2:DescribeNetworkInterfaces",
-                  "ec2:CreateNetworkInterface",
-                  "ec2:DeleteNetworkInterface",
-                ],
-                "Effect": "Allow",
-                "Resource": "*",
-              },
-            },
-            "PolicyName": "network-interfaces",
-          },
-        ],
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          Object {
-            "Key": "gu:repo",
-            "Value": "guardian/frontend-lambda",
-          },
-          Object {
-            "Key": "Stack",
-            "Value": "frontend",
-          },
-          Object {
-            "Key": "Stage",
-            "Value": "TEST",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "InvocationAlarm": Object {
-      "Properties": Object {
-        "AlarmDescription": "Notify if there are less than 5 invocations over last 5 minutes or there is insufficient data (i.e. no invocations)",
-        "ComparisonOperator": "LessThanOrEqualToThreshold",
-        "Dimensions": Array [
-          Object {
-            "Name": "FunctionName",
-            "Value": Object {
-              "Ref": "Lambda",
-            },
-          },
-        ],
-        "EvaluationPeriods": 1,
-        "InsufficientDataActions": Array [
-          Object {
-            "Ref": "NotificationTopic",
-          },
-        ],
-        "MetricName": "Invocations",
-        "Namespace": "AWS/Lambda",
-        "Period": 3600,
-        "Statistic": "Sum",
-        "Threshold": 0,
-        "Unit": "Count",
-      },
-      "Type": "AWS::CloudWatch::Alarm",
-    },
     "Lambda": Object {
+      "DependsOn": Array [
+        "faciaPurgerLambdaServiceRoleDefaultPolicyD659707F",
+        "faciaPurgerLambdaServiceRoleD80DA945",
+      ],
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "DeployBucket",
+            "Ref": "DistributionBucketName",
           },
-          "S3Key": Object {
-            "Fn::Sub": "frontend/\${Stage}/\${PackageName}/\${PackageName}.jar",
-          },
+          "S3Key": "frontend/TEST/facia-purger/facia-purger.jar",
         },
-        "Description": "Purge fastly after a facia change event from an S3 bucket",
         "Environment": Object {
           "Variables": Object {
+            "APP": "facia-purger",
             "FastlyAPIKey": Object {
               "Ref": "FastlyAPIKey",
             },
             "FastlyServiceId": Object {
               "Ref": "FastlyServiceId",
             },
-            "Stage": Object {
-              "Ref": "Stage",
-            },
+            "STACK": "frontend",
+            "STAGE": "TEST",
+            "Stage": "TEST",
           },
         },
         "Handler": "com.gu.purge.facia.Lambda",
         "MemorySize": 512,
         "Role": Object {
-          "Fn::GetAtt": "ExecutionRole.Arn",
+          "Fn::GetAtt": Array [
+            "faciaPurgerLambdaServiceRoleD80DA945",
+            "Arn",
+          ],
         },
-        "Runtime": "java8",
+        "Runtime": "java11",
         "Tags": Array [
+          Object {
+            "Key": "App",
+            "Value": "facia-purger",
+          },
           Object {
             "Key": "gu:cdk:version",
             "Value": "TEST",
@@ -223,16 +84,8 @@ Object {
       },
       "Type": "AWS::Lambda::Function",
     },
-    "NotificationTopic": Object {
+    "NotificationTopicEB7A0DF1": Object {
       "Properties": Object {
-        "Subscription": Array [
-          Object {
-            "Endpoint": Object {
-              "Ref": "EmailRecipient",
-            },
-            "Protocol": "email",
-          },
-        ],
         "Tags": Array [
           Object {
             "Key": "gu:cdk:version",
@@ -254,7 +107,314 @@ Object {
       },
       "Type": "AWS::SNS::Topic",
     },
+    "NotificationTopicTokenSubscription180FA58AD": Object {
+      "Properties": Object {
+        "Endpoint": Object {
+          "Ref": "EmailRecipient",
+        },
+        "Protocol": "email",
+        "TopicArn": Object {
+          "Ref": "NotificationTopicEB7A0DF1",
+        },
+      },
+      "Type": "AWS::SNS::Subscription",
+    },
+    "faciaPurgerLambdaErrorPercentageAlarmForLambdaB0D3D9E0": Object {
+      "Properties": Object {
+        "ActionsEnabled": true,
+        "AlarmActions": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:aws:sns:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":",
+                Object {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "NotificationTopicEB7A0DF1",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              Object {
+                "Ref": "Lambda",
+              },
+              " exceeded 1% error rate",
+            ],
+          ],
+        },
+        "AlarmName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "High error % from ",
+              Object {
+                "Ref": "Lambda",
+              },
+              " lambda in TEST",
+            ],
+          ],
+        },
+        "ComparisonOperator": "GreaterThanThreshold",
+        "EvaluationPeriods": 5,
+        "Metrics": Array [
+          Object {
+            "Expression": "100*m1/m2",
+            "Id": "expr_1",
+            "Label": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "Error % of ",
+                  Object {
+                    "Ref": "Lambda",
+                  },
+                ],
+              ],
+            },
+          },
+          Object {
+            "Id": "m1",
+            "MetricStat": Object {
+              "Metric": Object {
+                "Dimensions": Array [
+                  Object {
+                    "Name": "FunctionName",
+                    "Value": Object {
+                      "Ref": "Lambda",
+                    },
+                  },
+                ],
+                "MetricName": "Errors",
+                "Namespace": "AWS/Lambda",
+              },
+              "Period": 60,
+              "Stat": "Sum",
+            },
+            "ReturnData": false,
+          },
+          Object {
+            "Id": "m2",
+            "MetricStat": Object {
+              "Metric": Object {
+                "Dimensions": Array [
+                  Object {
+                    "Name": "FunctionName",
+                    "Value": Object {
+                      "Ref": "Lambda",
+                    },
+                  },
+                ],
+                "MetricName": "Invocations",
+                "Namespace": "AWS/Lambda",
+              },
+              "Period": 60,
+              "Stat": "Sum",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Threshold": 1,
+        "TreatMissingData": "notBreaching",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "faciaPurgerLambdaServiceRoleD80DA945": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "App",
+            "Value": "facia-purger",
+          },
+          Object {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/frontend-lambda",
+          },
+          Object {
+            "Key": "Stack",
+            "Value": "frontend",
+          },
+          Object {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "faciaPurgerLambdaServiceRoleDefaultPolicyD659707F": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":s3:::",
+                      Object {
+                        "Ref": "DistributionBucketName",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":s3:::",
+                      Object {
+                        "Ref": "DistributionBucketName",
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            Object {
+              "Action": "ssm:GetParametersByPath",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:aws:ssm:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":parameter/TEST/frontend/facia-purger",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "ssm:GetParameters",
+                "ssm:GetParameter",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:aws:ssm:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":parameter/TEST/frontend/facia-purger/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "faciaPurgerLambdaServiceRoleDefaultPolicyD659707F",
+        "Roles": Array [
+          Object {
+            "Ref": "faciaPurgerLambdaServiceRoleD80DA945",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "invacationAlarmDCBD52AE": Object {
+      "Properties": Object {
+        "ActionsEnabled": true,
+        "AlarmActions": Array [
+          Object {
+            "Ref": "NotificationTopicEB7A0DF1",
+          },
+        ],
+        "AlarmDescription": "Notify if there are less than 5 invocations over last 10 minutes or there is insufficient data (i.e. no invocations)",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "Dimensions": Array [
+          Object {
+            "Name": "FunctionName",
+            "Value": Object {
+              "Ref": "Lambda",
+            },
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "MetricName": "Invocations",
+        "Namespace": "AWS/Lambda",
+        "Period": 600,
+        "Statistic": "Sum",
+        "Threshold": 5,
+        "TreatMissingData": "breaching",
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
   },
 }
 `;
-
