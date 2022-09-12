@@ -27,7 +27,8 @@ lazy val root = (project in file(".")).enablePlugins(RiffRaffArtifact)
 
 assemblyJarName := "facia-purger.jar"
 riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}"
-riffRaffArtifactResources += (baseDirectory.value / "cloudformation.yaml" -> "cloudformation/cloudformation.yaml")
+riffRaffArtifactResources += (baseDirectory.value / "../cdk/cdk.out/FaciaPurger-CODE.template.json" -> "cloudformation/cloudformation-CODE.yaml")
+riffRaffArtifactResources += (baseDirectory.value / "../cdk/cdk.out/FaciaPurger-PROD.template.json" -> "cloudformation/cloudformation-PROD.yaml")
 riffRaffArtifactResources += (baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml")
 
 assembly / assemblyMergeStrategy := {

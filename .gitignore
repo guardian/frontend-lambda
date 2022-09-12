@@ -1,9 +1,15 @@
-
-target
+# System
 .DS_Store
+
+# IDE Settings
+.vscode
 .idea
 
-*.iml
-
+# Build directories
+target
 .metals
-.vscode
+.bsp
+build.properties
+
+# Miscellaneous
+*.iml

@@ -1,0 +1,259 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The FaciaPurger stack matches the snapshot 1`] = `
+Object {
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Facia purger lambda",
+  "Parameters": Object {
+    "DeployBucket": Object {
+      "Description": "Bucket where RiffRaff uploads artifacts on deploy",
+      "Type": "String",
+    },
+    "EmailRecipient": Object {
+      "Description": "The email address to send alarm notifications to",
+      "Type": "String",
+    },
+    "FastlyAPIKey": Object {
+      "Description": "API key with purge writes for service with id FastlyServiceId",
+      "NoEcho": true,
+      "Type": "String",
+    },
+    "FastlyServiceId": Object {
+      "Description": "Id of service to purge",
+      "Type": "String",
+    },
+    "PackageName": Object {
+      "Default": "facia-purger",
+      "Description": "Lambda name",
+      "Type": "String",
+    },
+    "Stage": Object {
+      "AllowedValues": Array [
+        "CODE",
+        "PROD",
+      ],
+      "Default": "CODE",
+      "Description": "Stage name",
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "ErrorAlarm": Object {
+      "Properties": Object {
+        "AlarmActions": Array [
+          Object {
+            "Ref": "NotificationTopic",
+          },
+        ],
+        "AlarmDescription": "Notify if there are more than 20 errors over last 5 minutes",
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": Array [
+          Object {
+            "Name": "FunctionName",
+            "Value": Object {
+              "Ref": "Lambda",
+            },
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "MetricName": "Errors",
+        "Namespace": "AWS/Lambda",
+        "Period": 300,
+        "Statistic": "Sum",
+        "Threshold": 20,
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "ExecutionRole": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": Array [
+                  "lambda.amazonaws.com",
+                ],
+              },
+            },
+          ],
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Object {
+                "Action": Array [
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:PutLogEvents",
+                ],
+                "Effect": "Allow",
+                "Resource": "arn:aws:logs:*:*:*",
+              },
+            },
+            "PolicyName": "logs",
+          },
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Object {
+                "Action": Array [
+                  "s3:GetObject",
+                ],
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::aws-frontend-store/*",
+              },
+            },
+            "PolicyName": "s3",
+          },
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Object {
+                "Action": Array [
+                  "ec2:DescribeNetworkInterfaces",
+                  "ec2:CreateNetworkInterface",
+                  "ec2:DeleteNetworkInterface",
+                ],
+                "Effect": "Allow",
+                "Resource": "*",
+              },
+            },
+            "PolicyName": "network-interfaces",
+          },
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/frontend-lambda",
+          },
+          Object {
+            "Key": "Stack",
+            "Value": "frontend",
+          },
+          Object {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "InvocationAlarm": Object {
+      "Properties": Object {
+        "AlarmDescription": "Notify if there are less than 5 invocations over last 5 minutes or there is insufficient data (i.e. no invocations)",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "Dimensions": Array [
+          Object {
+            "Name": "FunctionName",
+            "Value": Object {
+              "Ref": "Lambda",
+            },
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": Array [
+          Object {
+            "Ref": "NotificationTopic",
+          },
+        ],
+        "MetricName": "Invocations",
+        "Namespace": "AWS/Lambda",
+        "Period": 3600,
+        "Statistic": "Sum",
+        "Threshold": 0,
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "Lambda": Object {
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "DeployBucket",
+          },
+          "S3Key": Object {
+            "Fn::Sub": "frontend/\${Stage}/\${PackageName}/\${PackageName}.jar",
+          },
+        },
+        "Description": "Purge fastly after a facia change event from an S3 bucket",
+        "Environment": Object {
+          "Variables": Object {
+            "FastlyAPIKey": Object {
+              "Ref": "FastlyAPIKey",
+            },
+            "FastlyServiceId": Object {
+              "Ref": "FastlyServiceId",
+            },
+            "Stage": Object {
+              "Ref": "Stage",
+            },
+          },
+        },
+        "Handler": "com.gu.purge.facia.Lambda",
+        "MemorySize": 512,
+        "Role": Object {
+          "Fn::GetAtt": "ExecutionRole.Arn",
+        },
+        "Runtime": "java8",
+        "Tags": Array [
+          Object {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/frontend-lambda",
+          },
+          Object {
+            "Key": "Stack",
+            "Value": "frontend",
+          },
+          Object {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "NotificationTopic": Object {
+      "Properties": Object {
+        "Subscription": Array [
+          Object {
+            "Endpoint": Object {
+              "Ref": "EmailRecipient",
+            },
+            "Protocol": "email",
+          },
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/frontend-lambda",
+          },
+          Object {
+            "Key": "Stack",
+            "Value": "frontend",
+          },
+          Object {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::SNS::Topic",
+    },
+  },
+}
+`;
