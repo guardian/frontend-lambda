@@ -61,7 +61,7 @@ export class FaciaPurger extends GuStack {
 			reason: 'preserve existing triggers',
 		});
 
-		const invocationAlarm = new Alarm(this, 'invacationAlarm', {
+		const invocationAlarm = new Alarm(this, 'invocationAlarm', {
 			alarmDescription:
 				'Notify if there are less than 5 invocations over last 10 minutes or there is insufficient data (i.e. no invocations)',
 			comparisonOperator: ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,

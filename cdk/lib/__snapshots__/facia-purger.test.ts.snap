@@ -386,7 +386,7 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
-    "invacationAlarmDCBD52AE": Object {
+    "invocationAlarm21DBDD65": Object {
       "Properties": Object {
         "ActionsEnabled": true,
         "AlarmActions": Array [
