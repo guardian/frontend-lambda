@@ -20,7 +20,7 @@ deployments:
   facia-purger:
     type: aws-lambda
     parameters:
-      bucket: aws-frontend-artifacts
+      bucketSsmLookup: true
       functions:
         PROD:
           name: facia-purger-lambda-PROD-Lambda-190WIIV8979JL
