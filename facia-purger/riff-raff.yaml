@@ -2,6 +2,10 @@ stacks:
   - frontend
 regions:
   - eu-west-1
+allowedStages:
+  - PROD
+  - CODE
+
 deployments:
   cloudformation:
     type: cloud-formation
