@@ -10,7 +10,9 @@ deployments:
       cloudFormationStackByTags: false
       prependStackToCloudFormationStackName: false
       cloudFormationStackName: facia-purger-lambda
-      templatePath: cloudformation.yaml
+      templateStagePaths:
+        PROD: cloudformation-PROD.yaml
+        CODE: cloudformation-CODE.yaml
   facia-purger:
     type: aws-lambda
     parameters:
