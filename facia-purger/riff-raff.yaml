@@ -1,7 +1,7 @@
 stacks:
-- frontend
+  - frontend
 regions:
-- eu-west-1
+  - eu-west-1
 deployments:
   cloudformation:
     type: cloud-formation
