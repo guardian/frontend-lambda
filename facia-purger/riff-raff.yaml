@@ -1,7 +1,11 @@
 stacks:
-- frontend
+  - frontend
 regions:
-- eu-west-1
+  - eu-west-1
+allowedStages:
+  - PROD
+  - CODE
+
 deployments:
   cloudformation:
     type: cloud-formation
@@ -10,11 +14,13 @@ deployments:
       cloudFormationStackByTags: false
       prependStackToCloudFormationStackName: false
       cloudFormationStackName: facia-purger-lambda
-      templatePath: cloudformation.yaml
+      templateStagePaths:
+        PROD: cloudformation-PROD.yaml
+        CODE: cloudformation-CODE.yaml
   facia-purger:
     type: aws-lambda
     parameters:
-      bucket: aws-frontend-artifacts
+      bucketSsmLookup: true
       functions:
         PROD:
           name: facia-purger-lambda-PROD-Lambda-190WIIV8979JL
