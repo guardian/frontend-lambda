@@ -3,7 +3,7 @@ import sbtassembly.Log4j2MergeStrategy
 name := "facia-purger"
 
 scalaVersion := "2.11.8"
-val log4jVersion = "2.16.0"
+val log4jVersion = "2.17.1"
 
 organization := "com.gu"
 description := "Lambda for purging Fastly cache based on s3 events"
@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "org.apache.logging.log4j" % "log4j-api" % log4jVersion,
   "org.apache.logging.log4j" % "log4j-core" % log4jVersion,
   "org.apache.logging.log4j" % "log4j-slf4j-impl" % log4jVersion,
-  "com.amazonaws" % "aws-lambda-java-log4j2" % "1.4.0",
+  "com.amazonaws" % "aws-lambda-java-log4j2" % "1.5.1",
   "org.scalatest" %% "scalatest" % "2.2.2" % "test",
   "org.mockito" % "mockito-all" % "1.9.5" % "test"
   )
