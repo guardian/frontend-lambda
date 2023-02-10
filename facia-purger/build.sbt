@@ -33,6 +33,8 @@ riffRaffArtifactResources += (baseDirectory.value / "riff-raff.yaml" -> "riff-ra
 
 assembly / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.last == "Log4j2Plugins.dat" => Log4j2MergeStrategy.plugincache
+  // https://stackoverflow.com/a/55557287
+  // Okhttp and log4j both have module-info files, but we don't actually need either file.
   case PathList(ps @ _*) if ps.last == "module-info.class" => MergeStrategy.discard
   case x =>
     val oldStrategy = (assembly / assemblyMergeStrategy).value
