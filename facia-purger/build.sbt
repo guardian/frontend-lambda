@@ -33,6 +33,7 @@ riffRaffArtifactResources += (baseDirectory.value / "riff-raff.yaml" -> "riff-ra
 
 assembly / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.last == "Log4j2Plugins.dat" => Log4j2MergeStrategy.plugincache
+  case PathList(ps @ _*) if ps.last == "module-info.class" => MergeStrategy.discard
   case x =>
     val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
