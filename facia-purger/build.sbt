@@ -44,3 +44,5 @@ assembly / assemblyMergeStrategy := {
 riffRaffPackageType := assembly.value
 riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 riffRaffUploadManifestBucket := Option("riffraff-builds")
+
+scalacOptions ++= Seq("-Xfatal-warnings")
