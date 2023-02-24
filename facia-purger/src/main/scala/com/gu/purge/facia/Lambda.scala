@@ -35,7 +35,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
 
   // OkHttp requires a media type even for an empty POST body
   private val EmptyJsonBody: RequestBody =
-    RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "")
+    RequestBody.create("", MediaType.parse("application/json; charset=utf-8"))
 
   /**
    * Send a soft purge request to Fastly API.
