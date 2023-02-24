@@ -2,7 +2,7 @@ package com.gu.purge.facia
 
 import com.amazonaws.services.lambda.runtime.{ Context, RequestHandler }
 import com.amazonaws.services.lambda.runtime.events.S3Event
-import com.amazonaws.services.s3.event.S3EventNotification.S3Entity
+import com.amazonaws.services.lambda.runtime.events.models.s3.S3EventNotification.S3Entity
 import okhttp3._
 import org.apache.commons.codec.digest.DigestUtils
 
