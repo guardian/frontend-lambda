@@ -14,17 +14,17 @@ scalacOptions ++= Seq(
   "-Ywarn-dead-code"
 )
 
-val awsVersion = "1.11.240"
+val awsVersion = "2.20.12"
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.25",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "com.amazonaws" % "aws-lambda-java-core" % "1.2.0",
-  "com.amazonaws" % "aws-java-sdk-core" % awsVersion,
-  "com.amazonaws" % "aws-java-sdk-ssm" % awsVersion,
-  "com.amazonaws" % "aws-java-sdk-s3" % awsVersion,
-  "com.amazonaws" % "aws-lambda-java-events" % "2.0.1",
+  "software.amazon.awssdk" % "sdk-core" % "2.0.1",
+  "com.amazonaws" % "aws-java-sdk-ssm" % "1.12.415",
+  "com.amazonaws" % "aws-java-sdk-s3" % "1.12.415",
+  "com.amazonaws" % "aws-lambda-java-events" % "3.11.0",
   "com.typesafe" % "config" % "1.3.1",
   "org.scalactic" %% "scalactic" % "3.2.15",
   "org.scalatest" %% "scalatest" % "3.2.15" % Test,
