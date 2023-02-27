@@ -5,14 +5,12 @@ organization := "com.gu"
 
 description:= "Backs up parameter store properties. To be executed on an interval"
 
-version := "1.0"
-
 scalaVersion := "2.13.10"
 
 scalacOptions ++= Seq(
   "-deprecation",
   "-encoding", "UTF-8",
-  "-release:11",
+  "-release:8",
   "-Ywarn-dead-code"
 )
 
