@@ -1,18 +1,18 @@
 package com.gu.backupparameterstore
 
-import com.amazonaws.services.s3.model.PutObjectResult
 import com.gu.aws.{ ParameterStore, S3 }
 import org.mockito.ArgumentMatchers.{ eq => eqq, _ }
 import org.mockito.Mockito._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
+import software.amazon.awssdk.services.s3.model.PutObjectResponse
 
 class BackupServiceTest extends AnyFlatSpec with MockitoSugar with Matchers {
   "backupParameterStore" should "find parameters from parameter store and put them in S3" in {
     val parameterStore = mock[ParameterStore]
     val s3 = mock[S3]
-    val result = mock[PutObjectResult]
+    val result = mock[PutObjectResponse]
     val expectedPut =
       """
         |{

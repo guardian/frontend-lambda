@@ -1,15 +1,18 @@
 package com.gu.aws
 
-import java.io.ByteArrayInputStream
-import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredentialsProvider }
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model.{ ObjectMetadata, PutObjectRequest, PutObjectResult, SSEAwsKeyManagementParams }
-import com.amazonaws.services.simplesystemsmanagement.{ AWSSimpleSystemsManagement, AWSSimpleSystemsManagementClientBuilder }
+import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest
+import com.amazonaws.services.simplesystemsmanagement.{AWSSimpleSystemsManagement, AWSSimpleSystemsManagementClientBuilder}
+import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.regions.Region.EU_WEST_1
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.{PutObjectRequest, PutObjectResponse}
 
-import scala.jdk.CollectionConverters._
+import java.nio.ByteBuffer
 import scala.annotation.tailrec
+import scala.jdk.CollectionConverters._
+import scala.util.Random
 
 object AwsConfig {
   val provider = new AWSCredentialsProviderChain(
@@ -63,19 +66,29 @@ class ParameterStore {
 }
 
 class S3 {
-  private val s3Client = AmazonS3ClientBuilder
-    .standard()
-    .withRegion(AwsConfig.region)
+  private val s3Client = S3Client.builder()
+    .region(EU_WEST_1)
     .build()
 
-  def put(bucket: String, key: String, content: String, kmsKey: String): PutObjectResult = {
+  def put(bucket: String, key: String, content: String, kmsKey: String): PutObjectResponse = {
     val bytes = content.getBytes()
-    val metadata = new ObjectMetadata()
-    metadata.setContentLength(bytes.length)
+//    val metadata = new ObjectMetadata()
+//    metadata.setContentLength(bytes.length)
 
-    val putObjectRequest = new PutObjectRequest(bucket, key, new ByteArrayInputStream(bytes), metadata)
-      .withSSEAwsKeyManagementParams(new SSEAwsKeyManagementParams(kmsKey))
+    val putObjectRequest = PutObjectRequest.builder.bucket(bucket).key(key).contentLength(bytes.length).ssekmsKeyId(kmsKey).build()
 
-    s3Client.putObject(putObjectRequest)
+    //    s3.putObject(objectRequest, RequestBody.fromByteBuffer(getRandomByteBuffer(10_000)))
+    //
+    //    val putObjectRequest = new PutObjectRequest(bucket, key, new ByteArrayInputStream(bytes), metadata)
+    //      .withSSEAwsKeyManagementParams(new SSEAwsKeyManagementParams(kmsKey))
+
+
+
+    s3Client.putObject(putObjectRequest, RequestBody.fromByteBuffer(getRandomByteBuffer(10_000)));
+  }
+  private def getRandomByteBuffer(size: Int) = {
+    val b = new Array[Byte](size)
+    new Random().nextBytes(b)
+    ByteBuffer.wrap(b)
   }
 }
