@@ -36,3 +36,8 @@ jobs:
           LAST_TEAMCITY_BUILD=88
           export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
           sbt -v "clean;compile;test;riffRaffUpload"
+      - working-directory: ./backup-parameter-store
+        run: |
+          LAST_TEAMCITY_BUILD=88
+          export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
+          sbt -v "clean;compile;test;riffRaffUpload"
