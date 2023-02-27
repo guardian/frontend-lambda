@@ -9,10 +9,8 @@ import software.amazon.awssdk.regions.Region.EU_WEST_1
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.{PutObjectRequest, PutObjectResponse}
 
-import java.nio.ByteBuffer
 import scala.annotation.tailrec
 import scala.jdk.CollectionConverters._
-import scala.util.Random
 
 object AwsConfig {
   val provider = new AWSCredentialsProviderChain(
@@ -72,23 +70,11 @@ class S3 {
 
   def put(bucket: String, key: String, content: String, kmsKey: String): PutObjectResponse = {
     val bytes = content.getBytes()
-//    val metadata = new ObjectMetadata()
-//    metadata.setContentLength(bytes.length)
 
-    val putObjectRequest = PutObjectRequest.builder.bucket(bucket).key(key).contentLength(bytes.length).ssekmsKeyId(kmsKey).build()
+    val putObjectRequest = PutObjectRequest.builder
+      .bucket(bucket).key(key)
+      .contentLength(bytes.length).ssekmsKeyId(kmsKey).build()
 
-    //    s3.putObject(objectRequest, RequestBody.fromByteBuffer(getRandomByteBuffer(10_000)))
-    //
-    //    val putObjectRequest = new PutObjectRequest(bucket, key, new ByteArrayInputStream(bytes), metadata)
-    //      .withSSEAwsKeyManagementParams(new SSEAwsKeyManagementParams(kmsKey))
-
-
-
-    s3Client.putObject(putObjectRequest, RequestBody.fromByteBuffer(getRandomByteBuffer(10_000)));
-  }
-  private def getRandomByteBuffer(size: Int) = {
-    val b = new Array[Byte](size)
-    new Random().nextBytes(b)
-    ByteBuffer.wrap(b)
+    s3Client.putObject(putObjectRequest, RequestBody.fromBytes(bytes))
   }
 }
