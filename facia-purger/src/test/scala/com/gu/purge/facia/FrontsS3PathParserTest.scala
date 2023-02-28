@@ -1,8 +1,9 @@
 package com.gu.purge.facia
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class FrontsS3PathParserTest extends FlatSpec with Matchers {
+class FrontsS3PathParserTest extends AnyFlatSpec with Matchers {
 
   "S3 Path Parser" should "parse a front name without a slash" in {
     new FrontsS3PathParser("CODE", "CODE/frontsapi/pressed/live/au/fapi/pressed.v2.json").run() should be(Some("au"))

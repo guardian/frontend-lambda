@@ -6,7 +6,7 @@ import com.amazonaws.services.s3.event.S3EventNotification.S3Entity
 import okhttp3._
 import org.apache.commons.codec.digest.DigestUtils
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
 

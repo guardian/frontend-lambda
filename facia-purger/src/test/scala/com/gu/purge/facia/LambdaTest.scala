@@ -2,12 +2,12 @@ package com.gu.purge.facia
 
 import com.amazonaws.services.lambda.runtime.events.S3Event
 import com.amazonaws.services.s3.event.S3EventNotification._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers._
 
-import scala.collection.JavaConverters._
-import org.scalatest.FlatSpec
-import org.scalatest.Matchers._
+import scala.jdk.CollectionConverters._
 
-class LambdaTest extends FlatSpec {
+class LambdaTest extends AnyFlatSpec {
 
   val key = "DEV/frontsapi/pressed/live/au/fapi/pressed.v2.json"
   val req = new RequestParametersEntity("a")
