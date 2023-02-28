@@ -24,7 +24,7 @@ libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-java-sdk-core" % awsVersion,
   "com.amazonaws" % "aws-java-sdk-ssm" % awsVersion,
   "com.amazonaws" % "aws-java-sdk-s3" % awsVersion,
-  "com.amazonaws" % "aws-lambda-java-events" % "3.11.0",
+  "com.amazonaws" % "aws-lambda-java-events" % "2.0.1",
   "com.typesafe" % "config" % "1.3.1",
   "org.scalactic" %% "scalactic" % "3.2.15",
   "org.scalatest" %% "scalatest" % "3.2.15" % Test,
