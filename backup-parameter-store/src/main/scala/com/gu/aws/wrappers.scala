@@ -1,13 +1,13 @@
 package com.gu.aws
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
+import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredentialsProvider }
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest
-import com.amazonaws.services.simplesystemsmanagement.{AWSSimpleSystemsManagement, AWSSimpleSystemsManagementClientBuilder}
+import com.amazonaws.services.simplesystemsmanagement.{ AWSSimpleSystemsManagement, AWSSimpleSystemsManagementClientBuilder }
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.regions.Region.EU_WEST_1
 import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.model.{PutObjectRequest, PutObjectResponse}
+import software.amazon.awssdk.services.s3.model.{ PutObjectRequest, PutObjectResponse }
 
 import scala.annotation.tailrec
 import scala.jdk.CollectionConverters._

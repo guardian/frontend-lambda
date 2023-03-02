@@ -12,7 +12,6 @@ class BackupServiceTest extends AnyFlatSpec with MockitoSugar with Matchers {
   "backupParameterStore" should "find parameters from parameter store and put them in S3" in {
     val parameterStore = mock[ParameterStore]
     val s3 = mock[S3]
-    val result = mock[PutObjectResponse]
     val expectedPut =
       """
         |{
@@ -23,7 +22,10 @@ class BackupServiceTest extends AnyFlatSpec with MockitoSugar with Matchers {
 
     def putContentMatcher: String = argThat[String](_.replaceAll("\\s", "") == expectedPut.replaceAll("\\s", ""))
     when(parameterStore.getPath("/frontend", isRecursiveSearch = true)) thenReturn Map("foo" -> "bar", "hello" -> "world")
-    when(s3.put(eqq("aws-frontend-backup"), any[String], putContentMatcher, eqq("arn:aws:kms:eu-west-1:642631414762:alias/FrontendConfigKey"))) thenReturn result
+    when(s3.put(eqq("aws-frontend-backup"), any[String], putContentMatcher, eqq("arn:aws:kms:eu-west-1:642631414762:alias/FrontendConfigKey"))) thenAnswer { invocation =>
+      val args = invocation.getArguments
+      PutObjectResponse.builder.build
+    }
 
     val backupService = new BackupService(parameterStore, s3, Env("app", "stack", "stage"))
 
