@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.model.{ ObjectMetadata, PutObjectRequest, PutOb
 import com.amazonaws.services.simplesystemsmanagement.{ AWSSimpleSystemsManagement, AWSSimpleSystemsManagementClientBuilder }
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.annotation.tailrec
 
 object AwsConfig {

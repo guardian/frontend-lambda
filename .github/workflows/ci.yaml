@@ -30,7 +30,7 @@ jobs:
           npm run lint
           npm test
           npm run synth
-      - name: clean, compile, test and upload
+      - name: clean, compile, test and upload facia-purger
         working-directory: ./facia-purger
         run: |
           LAST_TEAMCITY_BUILD=88

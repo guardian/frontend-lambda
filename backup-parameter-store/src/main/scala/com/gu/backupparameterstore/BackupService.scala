@@ -5,7 +5,7 @@ import java.util.Date
 import com.gu.aws._
 import com.typesafe.config.{ ConfigFactory, ConfigRenderOptions }
 import com.typesafe.scalalogging.LazyLogging
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class BackupService(parameterStore: ParameterStore, s3: S3, env: Env) extends LazyLogging {
 
