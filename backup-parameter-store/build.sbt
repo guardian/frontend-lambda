@@ -29,7 +29,17 @@ libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.2.15",
   "org.scalatest" %% "scalatest" % "3.2.15" % Test,
   "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % "test",
-  "org.mockito" % "mockito-core" % "2.13.0" % Test
+  "org.mockito" % "mockito-core" % "2.13.0" % Test,
+  "io.netty" % "netty-codec-http" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-codec-http2" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-codec" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-transport" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-common" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-buffer" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-handler" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-transport-classes-epoll" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-resolver" % "4.1.86.Final" exclude("io.netty", "netty-versions"),
+  "io.netty" % "netty-transport-native-unix-common" % "4.1.86.Final" exclude("io.netty", "netty-versions")
 )
 
 enablePlugins(RiffRaffArtifact)
@@ -40,11 +50,3 @@ riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 riffRaffUploadManifestBucket := Option("riffraff-builds")
 riffRaffArtifactResources += (file("cfn.yaml"), s"${name.value}-cfn/cfn.yaml")
 riffRaffManifestProjectName := s"dotcom:${name.value}"
-
-assembly / assemblyMergeStrategy  := {
-  case PathList("module-info.class") => MergeStrategy.discard
-  case x if x.endsWith("/module-info.class") => MergeStrategy.discard
-  case x =>
-    val oldStrategy = (assembly / assemblyMergeStrategy).value
-    oldStrategy(x)
-}
