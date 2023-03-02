@@ -30,6 +30,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.15" % Test,
   "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % "test",
   "org.mockito" % "mockito-core" % "2.13.0" % Test,
+  "org.scala-lang.modules" %% "scala-collection-compat" % "2.9.0"
 )
 
 enablePlugins(RiffRaffArtifact)
@@ -41,7 +42,5 @@ riffRaffUploadManifestBucket := Option("riffraff-builds")
 riffRaffArtifactResources += (file("cfn.yaml"), s"${name.value}-cfn/cfn.yaml")
 riffRaffManifestProjectName := s"dotcom:${name.value}"
 
-assemblyShadeRules in assembly := Seq(
-  ShadeRule.rename("io.netty.**" -> "shaded.netty.@1").inAll
-)
+
 
