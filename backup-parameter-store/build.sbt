@@ -20,18 +20,20 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.25",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-  "com.amazonaws" % "aws-lambda-java-core" % "1.2.2",
-  "software.amazon.awssdk" % "sdk-core" % "2.20.8",
-  "com.amazonaws" % "aws-java-sdk-ssm" % "1.12.415",
-  "software.amazon.awssdk" % "s3" % "2.20.12",
+  "software.amazon.awssdk" % "lambda" % awsVersion,
+  "software.amazon.awssdk" % "sdk-core" % awsVersion,
+  "software.amazon.awssdk" % "ssm" % awsVersion,
+  "software.amazon.awssdk" % "s3" % awsVersion,
+  "software.amazon.awssdk" % "url-connection-client" % awsVersion,
   "com.amazonaws" % "aws-lambda-java-events" % "3.11.0",
   "com.typesafe" % "config" % "1.3.1",
   "org.scalactic" %% "scalactic" % "3.2.15",
   "org.scalatest" %% "scalatest" % "3.2.15" % Test,
   "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % "test",
   "org.mockito" % "mockito-core" % "2.13.0" % Test,
-  "org.scala-lang.modules" %% "scala-collection-compat" % "2.9.0"
+  "org.scala-lang.modules" %% "scala-collection-compat" % "2.9.0",
 )
+
 
 enablePlugins(RiffRaffArtifact)
 

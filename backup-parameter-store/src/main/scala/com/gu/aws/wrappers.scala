@@ -1,16 +1,12 @@
 package com.gu.aws
 
-import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredentialsProvider }
-import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest
-import com.amazonaws.services.simplesystemsmanagement.{ AWSSimpleSystemsManagement, AWSSimpleSystemsManagementClientBuilder }
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.regions.Region.EU_WEST_1
 import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.model.{ PutObjectRequest, PutObjectResponse }
+import software.amazon.awssdk.services.s3.model.{PutObjectRequest, PutObjectResponse}
+import software.amazon.awssdk.services.ssm.model.GetParametersByPathRequest
 
 import scala.annotation.tailrec
-import scala.jdk.CollectionConverters._
 
 object AwsConfig {
   val provider = new AWSCredentialsProviderChain(
@@ -40,10 +36,10 @@ class ParameterStore {
     @tailrec
     def paginate(accum: Map[String, String], nextToken: Option[String]): Map[String, String] = {
 
-      val parameterRequest = new GetParametersByPathRequest()
-        .withWithDecryption(true)
-        .withPath(path)
-        .withRecursive(isRecursiveSearch)
+      val parameterRequest = GetParametersByPathRequest.builder()
+        .withDecryption(true)
+        .path(path)
+        .recursive(isRecursiveSearch).build()
 
       val parameterRequestWithNextToken = nextToken.map(parameterRequest.withNextToken).getOrElse(parameterRequest)
 
