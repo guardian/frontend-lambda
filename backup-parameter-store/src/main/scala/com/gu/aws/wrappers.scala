@@ -1,20 +1,13 @@
 package com.gu.aws
 
 import software.amazon.awssdk.core.sync.RequestBody
-import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.regions.Region.EU_WEST_1
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.{ PutObjectRequest, PutObjectResponse }
 import software.amazon.awssdk.services.ssm.SsmClient
 import software.amazon.awssdk.services.ssm.model.GetParametersByPathRequest
 
-import scala.annotation.tailrec
-import scala.jdk.CollectionConverters.{ IterableHasAsScala, IteratorHasAsScala }
-
-object AwsConfig {
-  val kmsKeyAlias: String = "arn:aws:kms:eu-west-1:642631414762:alias/FrontendConfigKey"
-}
-
+import scala.jdk.CollectionConverters.IterableHasAsScala
 class ParameterStore {
 
   lazy val client: SsmClient = SsmClient.builder()

@@ -11,6 +11,8 @@ import software.amazon.awssdk.services.ssm.{ SsmClient, SsmClientBuilder }
 object AWS {
   val region: Region = EU_WEST_1
 
+  val kmsKeyAlias: String = "arn:aws:kms:eu-west-1:642631414762:alias/FrontendConfigKey"
+
   def credentialsForDevAndProd(devProfile: String, prodCreds: AwsCredentialsProvider): AwsCredentialsProviderChain =
     AwsCredentialsProviderChain.of(prodCreds, ProfileCredentialsProvider.builder().profileName(devProfile).build())
 

@@ -20,7 +20,7 @@ class BackupService(parameterStore: ParameterStore, s3: S3, env: Env) extends La
     val date = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss").format(new Date())
     val keyName = s"config/frontend-config-${env.stage}-$date.conf"
     logger.info(s"Backing up config, key $keyName")
-    s3.put("aws-frontend-backup", keyName, config, AwsConfig.kmsKeyAlias)
+    s3.put("aws-frontend-backup", keyName, config, AWS.kmsKeyAlias)
   }
 
   private def findConfig() = {
