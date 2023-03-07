@@ -1,13 +1,12 @@
 package com.gu.aws
 
-
 import software.amazon.awssdk.auth.credentials._
 import software.amazon.awssdk.awscore.client.builder.AwsClientBuilder
 import software.amazon.awssdk.http.SdkHttpClient
 import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.regions.Region.EU_WEST_1
-import software.amazon.awssdk.services.ssm.{SsmClient, SsmClientBuilder}
+import software.amazon.awssdk.services.ssm.{ SsmClient, SsmClientBuilder }
 
 object AWS {
   val region: Region = EU_WEST_1
