@@ -17,7 +17,7 @@ object AWS {
     AwsCredentialsProviderChain.of(prodCreds, ProfileCredentialsProvider.builder().profileName(devProfile).build())
 
   lazy val credentials: AwsCredentialsProvider =
-    credentialsForDevAndProd("frontend", EnvironmentVariableCredentialsProvider.create())
+    credentialsForDevAndProd("frontend", InstanceProfileCredentialsProvider.create())
 
   def build[T, B <: AwsClientBuilder[B, T]](builder: B): T =
     builder.credentialsProvider(credentials).region(region).build()
