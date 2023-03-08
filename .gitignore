@@ -10,6 +10,8 @@ target
 .metals
 .bsp
 build.properties
+.bloop
+**/project/metals.sbt
 
 # Miscellaneous
 *.iml
