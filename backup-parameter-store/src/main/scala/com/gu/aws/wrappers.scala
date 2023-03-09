@@ -10,7 +10,7 @@ import software.amazon.awssdk.services.ssm.model.GetParametersByPathRequest
 import scala.jdk.CollectionConverters.IterableHasAsScala
 class ParameterStore {
 
-  lazy val client: SsmClient = SsmClient.builder()
+  private lazy val client: SsmClient = SsmClient.builder()
     .region(AWS.region).credentialsProvider(AWS.credentials)
     .build()
 
