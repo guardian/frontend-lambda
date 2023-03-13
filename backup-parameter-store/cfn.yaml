@@ -89,7 +89,7 @@ Resources:
           App: !Ref App
       Description: Backs up parameter store properties. To be executed on an interval
       Handler: com.gu.backupparameterstore.Lambda::handler
-      MemorySize: 512
+      MemorySize: 256
       Role: !GetAtt ExecutionRole.Arn
       Runtime: java8
       Timeout: 300
