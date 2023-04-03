@@ -35,7 +35,6 @@ export class BackupParameterStore extends GuStack {
 					schedule: Schedule.cron({
 						minute: '0',
 						hour: '0',
-						day: '*',
 						month: '*',
 						weekDay: '?',
 						year: '*',
