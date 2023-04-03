@@ -11,7 +11,7 @@
     "synth": "cdk synth --path-metadata false --version-reporting false",
     "diff": "cdk diff --path-metadata false --version-reporting false",
     "difflocal": "cdk diff FaciaPurger-PROD --template ../facia-purger/cloudformation.yaml --path-metadata false --version-reporting false ",
-    "diffBackupParamaterStore": "cdk diff BackupParamaterStore-CODE --template ../backup-parameter-store/cfn.yaml --path-metadata false --version-reporting false "
+    "diffBackupParamaterStore": "cdk diff BackupParameterStore-CODE --template ../backup-parameter-store/cfn.yaml --path-metadata false --version-reporting false "
   },
   "devDependencies": {
     "@guardian/cdk": "47.0.1",
