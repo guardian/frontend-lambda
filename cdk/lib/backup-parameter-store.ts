@@ -1,14 +1,12 @@
 import { GuScheduledLambda } from '@guardian/cdk';
 import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import { GuStack } from '@guardian/cdk/lib/constructs/core';
-import { GuLambdaFunction } from '@guardian/cdk/lib/constructs/lambda';
 import type { App } from 'aws-cdk-lib';
 import { CfnParameter, Duration } from 'aws-cdk-lib';
 import { Schedule } from 'aws-cdk-lib/aws-events';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
-import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
 export class BackupParameterStore extends GuStack {
 	constructor(scope: App, id: string, props: GuStackProps) {
@@ -44,7 +42,7 @@ export class BackupParameterStore extends GuStack {
 			app: 'backup-parameter-store',
 			fileName: 'backup-parameter-store.jar',
 			runtime: Runtime.JAVA_8,
-			handler: 'com.gu.backupparameterstore.Lambda',
+			handler: 'com.gu.backupparameterstore.Lambda::handler',
 			environment: {
 				Stage: this.stage,
 			},
