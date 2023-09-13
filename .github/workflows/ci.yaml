@@ -31,12 +31,14 @@ jobs:
           npm test
           npm run synth
       - name: clean, compile, test and upload facia-purger
+        if: contains(github.event.pull_request.files.*.filename, 'facia-purger/') || contains(github.event.pull_request.files.*.filename, 'facia-purger')
         working-directory: ./facia-purger
         run: |
           LAST_TEAMCITY_BUILD=88
           export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
           sbt -v "clean;compile;test;riffRaffUpload"
       - name: clean, compile, test and upload backup-parameter-store
+        if: contains(github.event.pull_request.files.*.filename, 'backup-parameter-store/') || contains(github.event.pull_request.files.*.filename, 'backup-parameter-store')
         working-directory: ./backup-parameter-store
         run: |
           LAST_TEAMCITY_BUILD=108
