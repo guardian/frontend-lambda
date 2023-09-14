@@ -5,7 +5,7 @@ on:
       - 'cdk/**'
       - 'facia-purger/**'
 jobs:
-  FaciaPurger:
+  facia-purger:
     runs-on: ubuntu-latest
     permissions:
       id-token: write

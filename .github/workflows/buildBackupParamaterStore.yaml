@@ -4,7 +4,7 @@ on:
     paths:
       - 'backup-parameter-store/**'
 jobs:
-  BackupParameterStore:
+  backup-parameter-store:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
