@@ -1,7 +1,5 @@
 name: Build Facia Purger
 on:
-  pull_request:
-  workflow_dispatch:
   push:
     paths:
       - 'cdk/**'

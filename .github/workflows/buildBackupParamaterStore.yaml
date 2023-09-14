@@ -1,7 +1,5 @@
 name: Build Backup Parameter Store
 on:
-  pull_request:
-  workflow_dispatch:
   push:
     paths:
       - 'backup-parameter-store/**'
