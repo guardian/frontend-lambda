@@ -42,8 +42,8 @@ jobs:
           buildNumberOffset: 88
           contentDirectories: |
             cloudformation:
-              - cloudformation-CODE.yaml
-              - cloudformation-PROD.yaml
+              - cdk/cdk.out/FaciaPurger-CODE.template.json
+              - cdk/cdk.out/FaciaPurger-PROD.template.json
             facia-purger:
               - facia-purger.jar
             
