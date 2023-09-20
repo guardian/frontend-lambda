@@ -38,7 +38,7 @@ jobs:
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v2.2.2
         with:
-          projectName: facia-purger
+          projectName: dotcom:lambda:facia-purger
           configPath: facia-purger/riff-raff.yaml
           buildNumberOffset: 88
           contentDirectories: |
