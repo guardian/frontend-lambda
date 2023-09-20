@@ -38,10 +38,12 @@ jobs:
         uses: guardian/actions-riff-raff@v2.2.2
         with:
           projectName: facia-purger
-          configPath: riff-raff.yaml
+          configPath: facia-purger/riff-raff.yaml
           buildNumberOffset: 88
           contentDirectories: |
-            cloudformation/cloudformation-CODE.yaml
-            cloudformation/cloudformation-PROD.yaml
-            facia-purger/facia-purger.jar
+            cloudformation:
+              - cloudformation-CODE.yaml
+              - cloudformation-PROD.yaml
+            facia-purger:
+              - facia-purger.jar
             
