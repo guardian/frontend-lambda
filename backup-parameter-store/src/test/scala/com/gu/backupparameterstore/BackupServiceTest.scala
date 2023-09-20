@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 
 class BackupServiceTest extends AnyFlatSpec with MockitoSugar with Matchers {
-  "backupParameterStore" should "find parameters from parameter store and put them in S3" in {
+  "backupParameterStore" should "find parameters from the parameter store and put them in S3" in {
     val parameterStore = mock[ParameterStore]
     val s3 = mock[S3]
     val result = mock[PutObjectResult]
