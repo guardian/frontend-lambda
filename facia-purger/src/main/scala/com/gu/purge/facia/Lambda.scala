@@ -14,7 +14,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
   private lazy val httpClient = new OkHttpClient()
 
   override def handleRequest(event: S3Event, context: Context) = {
-    log.debug(s"Facia-purger lambda is starting up")
+    log.debug(s"Facia-purger lambda starting up")
     val config = Config.load(stage)
 
     processS3Event(event, config)
