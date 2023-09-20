@@ -4,6 +4,7 @@ on:
     paths:
       - 'cdk/**'
       - 'facia-purger/**'
+  workflow_dispatch:
 jobs:
   facia-purger:
     runs-on: ubuntu-latest
