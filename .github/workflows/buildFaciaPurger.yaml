@@ -30,7 +30,7 @@ jobs:
         working-directory: ./facia-purger
         run: |
           sbt -v clean compile test assembly
-          cp target/scala*/facia-purger.jar .
+          cp facia-purger/target/scala*/facia-purger.jar .
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
