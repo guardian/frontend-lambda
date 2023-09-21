@@ -32,5 +32,5 @@ jobs:
           buildNumberOffset: 1118
           contentDirectories: |
             backup-parameter-store:
-              - backup-parameter-store/backup-parameter-store.jar
               - backup-parameter-store/cfn.yaml
+              - backup-parameter-store/backup-parameter-store.jar
