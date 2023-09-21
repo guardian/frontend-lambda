@@ -40,7 +40,7 @@ jobs:
         with:
           projectName: dotcom:lambda:facia-purger
           configPath: facia-purger/riff-raff.yaml
-          buildNumberOffset: 88
+          buildNumberOffset: 188
           contentDirectories: |
             cloudformation:
               - cdk/cdk.out/FaciaPurger-CODE.template.json

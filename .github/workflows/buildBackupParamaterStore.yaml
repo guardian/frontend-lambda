@@ -29,7 +29,7 @@ jobs:
         with:
           projectName: dotcom:backup-parameter-store
           configPath: backup-parameter-store/riff-raff.yaml
-          buildNumberOffset: 118
+          buildNumberOffset: 1118
           contentDirectories: |
             backup-parameter-store:
               - backup-parameter-store/backup-parameter-store.jar

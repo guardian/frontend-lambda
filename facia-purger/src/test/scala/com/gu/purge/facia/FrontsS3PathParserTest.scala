@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 
 class FrontsS3PathParserTest extends AnyFlatSpec with Matchers {
 
-  "S3 Path Parser" should "parse a fronts name without a slash" in {
+  "S3 Path Parser" should "parse a front name without a slash" in {
     new FrontsS3PathParser("CODE", "CODE/frontsapi/pressed/live/au/fapi/pressed.v2.json").run() should be(Some("au"))
   }
 
