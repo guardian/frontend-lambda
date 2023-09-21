@@ -33,4 +33,4 @@ jobs:
           contentDirectories: |
             backup-parameter-store:
               - backup-parameter-store/backup-parameter-store.jar
-              - cfn.yaml
+              - backup-parameter-store/cfn.yaml
