@@ -15,10 +15,11 @@ jobs:
         with:
           java-version: "11"
           distribution: "corretto"
-      - name: clean, compile, test
+      - name: clean, compile, test assemble jar, copy to root dir
         working-directory: ./backup-parameter-store
         run: |
-          sbt -v clean compile test
+          sbt -v clean compile test assembly
+          cp target/scala*/backup-parameter-store.jar .
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
@@ -31,5 +32,5 @@ jobs:
           buildNumberOffset: 118
           contentDirectories: |
             backup-parameter-store:
-              - backup-parameter-store.jar
+              - backup-parameter-store/backup-parameter-store.jar
               - cfn.yaml
