@@ -21,5 +21,5 @@ deployments:
     parameters:
       prependStackToCloudFormationStackName: false
       cloudFormationStackName: backup-parameter-store
-      templatePath: cfn.yaml
+      templatePath: backup-parameter-store/cfn.yaml
     dependencies: [backup-parameter-store]
