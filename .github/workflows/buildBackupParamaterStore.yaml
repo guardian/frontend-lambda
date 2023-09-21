@@ -31,7 +31,8 @@ jobs:
           configPath: backup-parameter-store/riff-raff.yaml
           buildNumberOffset: 1118
           contentDirectories: |
-            backup-parameter-store:
+            backup-parameter-store-cfn:
               - backup-parameter-store/cfn.yaml
+            backup-parameter-store:
               - backup-parameter-store/backup-parameter-store.jar
 
