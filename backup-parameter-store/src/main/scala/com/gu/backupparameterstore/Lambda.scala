@@ -21,7 +21,7 @@ object Lambda extends LazyLogging {
   val backupService = new BackupService(new ParameterStore, new S3, env)
 
   def handler(lambdaInput: ConfigEvent, context: Context): Unit = {
-    logger.info(s"Starting up $env")
+    logger.info(s"Starting $env")
     backupService.backupParameterStore()
   }
 
