@@ -14,7 +14,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
   private lazy val httpClient = new OkHttpClient()
 
   override def handleRequest(event: S3Event, context: Context) = {
-    log.debug(s"Facia-purger lambda starting up")
+    log.debug(s"Facia-purger lambda is starting up")
     val config = Config.load(stage)
 
     processS3Event(event, config)
@@ -26,7 +26,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
     log.debug(s"Processing ${entities.size} updated entities ...")
 
     entities.forall { entity =>
-      log.info(s"debug path log: ${entity.getObject.getKey}")
+      log.info(s"Debug path log: ${entity.getObject.getKey}")
       new FrontsS3PathParser(stage, entity.getObject.getKey)
         .run()
         .exists(sendPurgeRequest(_, config))

@@ -32,14 +32,7 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "2.13.0" % Test
 )
 
-enablePlugins(RiffRaffArtifact)
-
 assemblyJarName := s"${name.value}.jar"
-riffRaffPackageType := assembly.value
-riffRaffUploadArtifactBucket := Option("riffraff-artifact")
-riffRaffUploadManifestBucket := Option("riffraff-builds")
-riffRaffArtifactResources += (file("cfn.yaml"), s"${name.value}-cfn/cfn.yaml")
-riffRaffManifestProjectName := s"dotcom:${name.value}"
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard

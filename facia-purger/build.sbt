@@ -24,13 +24,9 @@ libraryDependencies ++= Seq(
   
 def env(key: String): Option[String] = Option(System.getenv(key))
 
-lazy val root = (project in file(".")).enablePlugins(RiffRaffArtifact)
+lazy val root = (project in file("."))
 
 assemblyJarName := "facia-purger.jar"
-riffRaffManifestProjectName := s"dotcom:lambda:${normalizedName.value}"
-riffRaffArtifactResources += (baseDirectory.value / "../cdk/cdk.out/FaciaPurger-CODE.template.json" -> "cloudformation/cloudformation-CODE.yaml")
-riffRaffArtifactResources += (baseDirectory.value / "../cdk/cdk.out/FaciaPurger-PROD.template.json" -> "cloudformation/cloudformation-PROD.yaml")
-riffRaffArtifactResources += (baseDirectory.value / "riff-raff.yaml" -> "riff-raff.yaml")
 
 assembly / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.last == "Log4j2Plugins.dat" => Log4j2MergeStrategy.plugincache
@@ -41,9 +37,5 @@ assembly / assemblyMergeStrategy := {
     val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
 }
-
-riffRaffPackageType := assembly.value
-riffRaffUploadArtifactBucket := Option("riffraff-artifact")
-riffRaffUploadManifestBucket := Option("riffraff-builds")
 
 scalacOptions ++= Seq("-Xfatal-warnings")

@@ -11,17 +11,26 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-          aws-region: eu-west-1
       - uses: actions/setup-java@v3
         with:
           java-version: "11"
           distribution: "corretto"
-      - name: clean, compile, test and upload backup-parameter-store
+      - name: clean, compile, test assemble jar, copy to root dir
         working-directory: ./backup-parameter-store
         run: |
-          LAST_TEAMCITY_BUILD=118
-          export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
-          sbt -v "clean;compile;test;riffRaffUpload"
+          sbt -v clean compile test assembly
+          cp target/scala*/backup-parameter-store.jar .
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          aws-region: eu-west-1
+      - name: Upload to Riff-Raff
+        uses: guardian/actions-riff-raff@v2.2.2
+        with:
+          projectName: dotcom:backup-parameter-store
+          configPath: backup-parameter-store/riff-raff.yaml
+          buildNumberOffset: 1118
+          contentDirectories: |
+            backup-parameter-store:
+              - backup-parameter-store/backup-parameter-store.jar
+              - backup-parameter-store/cfn.yaml
