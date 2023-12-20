@@ -5,7 +5,6 @@ deployments:
   backup-parameter-store:
     type: aws-lambda
     parameters:
-      bucket: aws-frontend-artifacts
       fileName: backup-parameter-store.jar
       functions:
         PROD:
