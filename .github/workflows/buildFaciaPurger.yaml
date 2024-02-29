@@ -2,9 +2,11 @@ name: Build Facia Purger
 on:
   push:
     paths:
+      -  '.github/**'
       - 'cdk/**'
       - 'facia-purger/**'
   workflow_dispatch:
+
 jobs:
   facia-purger:
     runs-on: ubuntu-latest

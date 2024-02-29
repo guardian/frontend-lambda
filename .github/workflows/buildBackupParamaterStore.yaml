@@ -2,7 +2,9 @@ name: Build Backup Parameter Store
 on:
   push:
     paths:
+      - '.github/**'
       - 'backup-parameter-store/**'
+
 jobs:
   backup-parameter-store:
     runs-on: ubuntu-latest
