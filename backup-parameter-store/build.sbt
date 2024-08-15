@@ -20,7 +20,7 @@ initialize := {
     "Java 11 is required for this project.")
 }
 
-val awsVersion = "1.12.644"
+val awsVersion = "1.12.768"
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.25",
