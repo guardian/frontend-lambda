@@ -23,6 +23,30 @@ Object {
     },
   },
   "Resources": Object {
+    "CachePurgedTopic25F39AA6": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/frontend-lambda",
+          },
+          Object {
+            "Key": "Stack",
+            "Value": "frontend",
+          },
+          Object {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "TopicName": "facia-fastly-cache-purger-TEST-decached",
+      },
+      "Type": "AWS::SNS::Topic",
+    },
     "Lambda": Object {
       "DependsOn": Array [
         "faciaPurgerLambdaServiceRoleDefaultPolicyD659707F",
@@ -233,6 +257,22 @@ Object {
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
+    "faciaPurgerLambdaEventInvokeConfig7A0C24F6": Object {
+      "Properties": Object {
+        "DestinationConfig": Object {
+          "OnSuccess": Object {
+            "Destination": Object {
+              "Ref": "CachePurgedTopic25F39AA6",
+            },
+          },
+        },
+        "FunctionName": Object {
+          "Ref": "Lambda",
+        },
+        "Qualifier": "$LATEST",
+      },
+      "Type": "AWS::Lambda::EventInvokeConfig",
+    },
     "faciaPurgerLambdaServiceRoleD80DA945": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {
@@ -290,6 +330,13 @@ Object {
       "Properties": Object {
         "PolicyDocument": Object {
           "Statement": Array [
+            Object {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Ref": "CachePurgedTopic25F39AA6",
+              },
+            },
             Object {
               "Action": Array [
                 "s3:GetObject*",

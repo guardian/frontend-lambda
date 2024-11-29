@@ -11,6 +11,7 @@ import {
 } from 'aws-cdk-lib/aws-cloudwatch';
 import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { SnsDestination } from 'aws-cdk-lib/aws-lambda-destinations';
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 
@@ -38,6 +39,10 @@ export class FaciaPurger extends GuStack {
 			new EmailSubscription(emailRecipient.valueAsString),
 		);
 
+		const cachePurgedTopic = new Topic(this, 'CachePurgedTopic', {
+			topicName: `facia-fastly-cache-purger-${this.stage}-decached`,
+		});
+
 		const lambda = new GuLambdaFunction(this, 'faciaPurgerLambda', {
 			app: 'facia-purger',
 			fileName: 'facia-purger.jar',
@@ -54,6 +59,7 @@ export class FaciaPurger extends GuStack {
 				numberOfMinutesAboveThresholdBeforeAlarm: 5,
 				snsTopicName: notificationTopic.topicName,
 			},
+			onSuccess: new SnsDestination(cachePurgedTopic),
 		});
 
 		this.overrideLogicalId(lambda, {
