@@ -8,7 +8,7 @@ import org.apache.commons.codec.digest.DigestUtils
 
 import scala.jdk.CollectionConverters._
 
-class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
+class Lambda() extends RequestHandler[S3Event, Array[String]] with Logging {
 
   var stage = Option(System.getenv("Stage")).getOrElse("DEV")
   private lazy val httpClient = new OkHttpClient()
@@ -17,7 +17,7 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
     log.debug(s"Facia-purger lambda starting up")
     val config = Config.load(stage)
 
-    processS3Event(event, config)
+    processS3Event(event, config).toArray
   }
 
   def processS3Event(event: S3Event, config: Config) = {
@@ -25,11 +25,11 @@ class Lambda() extends RequestHandler[S3Event, Boolean] with Logging {
 
     log.debug(s"Processing ${entities.size} updated entities ...")
 
-    entities.forall { entity =>
+    entities.flatMap { entity =>
       log.info(s"Debug path log: ${entity.getObject.getKey}")
       new FrontsS3PathParser(stage, entity.getObject.getKey)
-        .run()
-        .exists(sendPurgeRequest(_, config))
+        .run().toList
+        .flatMap((path) => Option.when(sendPurgeRequest(path, config))(path))
     }
   }
 
