@@ -2,6 +2,16 @@
 
 exports[`The FaciaPurger stack matches the snapshot 1`] = `
 Object {
+  "Outputs": Object {
+    "FaciaCachePurgeTopicArnOutput": Object {
+      "Export": Object {
+        "Name": "facia-fastly-cache-purger-TEST-DecachedContentSNSTopicARN",
+      },
+      "Value": Object {
+        "Ref": "CachePurgedTopic25F39AA6",
+      },
+    },
+  },
   "Parameters": Object {
     "DistributionBucketName": Object {
       "Default": "/account/services/artifact.bucket",

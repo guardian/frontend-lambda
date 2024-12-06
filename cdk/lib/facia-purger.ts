@@ -2,7 +2,7 @@ import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import { GuStack } from '@guardian/cdk/lib/constructs/core';
 import { GuLambdaFunction } from '@guardian/cdk/lib/constructs/lambda';
 import type { App } from 'aws-cdk-lib';
-import { CfnParameter, Duration } from 'aws-cdk-lib';
+import { CfnOutput, CfnParameter, Duration } from 'aws-cdk-lib';
 import {
 	Alarm,
 	ComparisonOperator,
@@ -41,6 +41,11 @@ export class FaciaPurger extends GuStack {
 
 		const cachePurgedTopic = new Topic(this, 'CachePurgedTopic', {
 			topicName: `facia-fastly-cache-purger-${this.stage}-decached`,
+		});
+
+		new CfnOutput(this, 'FaciaCachePurgeTopicArnOutput', {
+			value: cachePurgedTopic.topicArn,
+			exportName: `facia-fastly-cache-purger-${this.stage}-DecachedContentSNSTopicARN`,
 		});
 
 		const lambda = new GuLambdaFunction(this, 'faciaPurgerLambda', {
