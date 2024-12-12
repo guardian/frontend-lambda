@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - sbt-dependency-graph-36d132ea0043bd5d
-  workflow_dispatch: 
+  workflow_dispatch:
 jobs:
   dependency-graph:
     runs-on: ubuntu-latest
@@ -21,11 +21,26 @@ jobs:
       - name: Install sbt
         id: sbt
         uses: sbt/setup-sbt@8a071aa780c993c7a204c785d04d3e8eb64ef272 # v1.1.0
-      - name: Submit dependencies
-        id: submit
+
+      - name: Submit dependencies for backup-paramater-store
+        id: submit-backup-paramater-store
         uses: scalacenter/sbt-dependency-submission@64084844d2b0a9b6c3765f33acde2fbe3f5ae7d3 # v3.1.0
-      - name: Log snapshot for user validation
-        id: validate
-        run: cat ${{ steps.submit.outputs.snapshot-json-path }} | jq
+        with:
+          working-directory: ./backup-paramater-store
+
+      - name: Submit dependencies for facia-purger
+        id: submit-facia-purger
+        uses: scalacenter/sbt-dependency-submission@64084844d2b0a9b6c3765f33acde2fbe3f5ae7d3 # v3.1.0
+        with:
+          working-directory: ./facia-purger
+
+      - name: Log snapshot for backup-paramater-store
+        id: validate-backup-paramater-store
+        run: cat ${{ steps.submit-backup-paramater-store.outputs.snapshot-json-path }} | jq
+
+      - name: Log snapshot for facia-purger
+        id: validate-facia-purger
+        run: cat ${{ steps.submit-facia-purger.outputs.snapshot-json-path }} | jq
+
     permissions:
       contents: write
