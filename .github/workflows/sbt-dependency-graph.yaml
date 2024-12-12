@@ -26,7 +26,7 @@ jobs:
         id: submit-backup-paramater-store
         uses: scalacenter/sbt-dependency-submission@64084844d2b0a9b6c3765f33acde2fbe3f5ae7d3 # v3.1.0
         with:
-          working-directory: ./backup-paramater-store
+          working-directory: ./backup-parameter-store
 
       - name: Submit dependencies for facia-purger
         id: submit-facia-purger
