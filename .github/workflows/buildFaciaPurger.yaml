@@ -2,9 +2,9 @@ name: Build Facia Purger
 on:
   push:
     paths:
-      -  '.github/**'
-      - 'cdk/**'
-      - 'facia-purger/**'
+      - ".github/**"
+      - "cdk/**"
+      - "facia-purger/**"
   workflow_dispatch:
 
 jobs:
@@ -18,10 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v3
-        with:
-          java-version: "11"
-          distribution: "corretto"
+      - uses: guardian/setup-scala@v1
 
       - uses: actions/setup-node@v3
         with:
@@ -54,4 +51,3 @@ jobs:
               - cdk/cdk.out/FaciaPurger-PROD.template.json
             facia-purger:
               - facia-purger/facia-purger.jar
-            
