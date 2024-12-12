@@ -22,8 +22,8 @@ jobs:
         id: sbt
         uses: sbt/setup-sbt@8a071aa780c993c7a204c785d04d3e8eb64ef272 # v1.1.0
 
-      - name: Submit dependencies for backup-paramater-store
-        id: submit-backup-paramater-store
+      - name: Submit dependencies for backup-parameter-store
+        id: submit-backup-parameter-store
         uses: scalacenter/sbt-dependency-submission@64084844d2b0a9b6c3765f33acde2fbe3f5ae7d3 # v3.1.0
         with:
           working-directory: ./backup-parameter-store
@@ -34,9 +34,9 @@ jobs:
         with:
           working-directory: ./facia-purger
 
-      - name: Log snapshot for backup-paramater-store
-        id: validate-backup-paramater-store
-        run: cat ${{ steps.submit-backup-paramater-store.outputs.snapshot-json-path }} | jq
+      - name: Log snapshot for backup-parameter-store
+        id: validate-backup-parameter-store
+        run: cat ${{ steps.submit-backup-parameter-store.outputs.snapshot-json-path }} | jq
 
       - name: Log snapshot for facia-purger
         id: validate-facia-purger
