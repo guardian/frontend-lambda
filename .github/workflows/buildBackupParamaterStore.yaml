@@ -2,8 +2,8 @@ name: Build Backup Parameter Store
 on:
   push:
     paths:
-      - '.github/**'
-      - 'backup-parameter-store/**'
+      - ".github/**"
+      - "backup-parameter-store/**"
 
 jobs:
   backup-parameter-store:
@@ -16,10 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v3
-        with:
-          java-version: "11"
-          distribution: "corretto"
+      - uses: guardian/setup-scala@v1
 
       - name: clean, compile, test assemble jar, copy to root dir
         working-directory: ./backup-parameter-store
