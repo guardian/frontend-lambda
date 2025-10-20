@@ -5,7 +5,7 @@ organization := "com.gu"
 
 description:= "Backs up parameter store properties. To be executed on an interval"
 
-scalaVersion := "2.13.12"
+scalaVersion := "2.13.17"
 
 scalacOptions ++= Seq(
   "-deprecation",
