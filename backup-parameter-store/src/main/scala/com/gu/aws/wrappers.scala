@@ -5,8 +5,9 @@ import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredenti
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.{ ObjectMetadata, PutObjectRequest, PutObjectResult, SSEAwsKeyManagementParams }
-import com.amazonaws.services.simplesystemsmanagement.{ AWSSimpleSystemsManagement, AWSSimpleSystemsManagementClientBuilder }
-import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.ssm.SsmClient
+import software.amazon.awssdk.services.ssm.model.GetParametersByPathRequest
 
 import scala.jdk.CollectionConverters._
 import scala.annotation.tailrec
@@ -21,9 +22,9 @@ object AwsConfig {
 
 class ParameterStore {
 
-  private lazy val client: AWSSimpleSystemsManagement = AWSSimpleSystemsManagementClientBuilder
-    .standard()
-    .withRegion(AwsConfig.region)
+  private lazy val client: SsmClient = SsmClient
+    .builder()
+    .region(Region.of(AwsConfig.region))
     .build()
 
   def unwrapQuotedString(input: String): String = {
@@ -39,20 +40,26 @@ class ParameterStore {
     @tailrec
     def paginate(accum: Map[String, String], nextToken: Option[String]): Map[String, String] = {
 
-      val parameterRequest = new GetParametersByPathRequest()
-        .withWithDecryption(true)
-        .withPath(path)
-        .withRecursive(isRecursiveSearch)
+      val parameterRequest = GetParametersByPathRequest
+        .builder()
+        .withDecryption(true)
+        .path(path)
+        .recursive(isRecursiveSearch)
+        .build()
 
-      val parameterRequestWithNextToken = nextToken.map(parameterRequest.withNextToken).getOrElse(parameterRequest)
+      val parameterRequestWithNextToken = nextToken
+        .map(token => parameterRequest
+          .toBuilder.nextToken(token)
+          .build())
+        .getOrElse(parameterRequest)
 
       val result = client.getParametersByPath(parameterRequestWithNextToken)
 
-      val resultMap = result.getParameters.asScala.map { param =>
-        param.getName -> unwrapQuotedString(param.getValue)
+      val resultMap = result.parameters().asScala.map { param =>
+        param.name() -> unwrapQuotedString(param.value)
       }.toMap
 
-      Option(result.getNextToken) match {
+      Option(result.nextToken()) match {
         case Some(next) => paginate(accum ++ resultMap, Some(next))
         case None => accum ++ resultMap
       }
