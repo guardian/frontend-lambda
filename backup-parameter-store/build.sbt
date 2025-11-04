@@ -26,7 +26,7 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.25",
   "ch.qos.logback" % "logback-classic" % "1.3.14",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-  "com.amazonaws" % "aws-lambda-java-core" % "1.2.0",
+  "com.amazonaws" % "aws-lambda-java-core" % "1.4.0",
   "com.amazonaws" % "aws-java-sdk-core" % awsVersion,
   "com.amazonaws" % "aws-java-sdk-ssm" % awsVersion,
   "com.amazonaws" % "aws-java-sdk-s3" % awsVersion,
