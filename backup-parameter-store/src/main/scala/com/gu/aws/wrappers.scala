@@ -1,11 +1,10 @@
 package com.gu.aws
 
-import java.io.ByteArrayInputStream
-import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredentialsProvider }
-import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model.{ ObjectMetadata, PutObjectRequest, PutObjectResult, SSEAwsKeyManagementParams }
+import software.amazon.awssdk.core.sync.RequestBody
+
 import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.{ PutObjectRequest, PutObjectResponse, ServerSideEncryption }
 import software.amazon.awssdk.services.ssm.SsmClient
 import software.amazon.awssdk.services.ssm.model.GetParametersByPathRequest
 
@@ -13,9 +12,6 @@ import scala.jdk.CollectionConverters._
 import scala.annotation.tailrec
 
 object AwsConfig {
-  val provider = new AWSCredentialsProviderChain(
-    new ProfileCredentialsProvider("frontend"),
-    InstanceProfileCredentialsProvider.getInstance())
   val region = "eu-west-1"
   val kmsKeyAlias: String = "arn:aws:kms:eu-west-1:642631414762:alias/FrontendConfigKey"
 }
@@ -70,19 +66,22 @@ class ParameterStore {
 }
 
 class S3 {
-  private val s3Client = AmazonS3ClientBuilder
-    .standard()
-    .withRegion(AwsConfig.region)
+  private val s3Client = S3Client
+    .builder()
+    .region(Region.of(AwsConfig.region))
     .build()
 
-  def put(bucket: String, key: String, content: String, kmsKey: String): PutObjectResult = {
+  def put(bucket: String, key: String, content: String, kmsKey: String): PutObjectResponse = {
     val bytes = content.getBytes()
-    val metadata = new ObjectMetadata()
-    metadata.setContentLength(bytes.length)
 
-    val putObjectRequest = new PutObjectRequest(bucket, key, new ByteArrayInputStream(bytes), metadata)
-      .withSSEAwsKeyManagementParams(new SSEAwsKeyManagementParams(kmsKey))
+    val putObjectRequest = PutObjectRequest.builder()
+      .bucket(bucket)
+      .key(key)
+      .contentLength(bytes.length)
+      .serverSideEncryption(ServerSideEncryption.AWS_KMS)
+      .ssekmsKeyId(kmsKey)
+      .build()
 
-    s3Client.putObject(putObjectRequest)
+    s3Client.putObject(putObjectRequest, RequestBody.fromBytes(bytes))
   }
 }

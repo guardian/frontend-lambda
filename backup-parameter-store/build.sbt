@@ -20,17 +20,16 @@ initialize := {
     "Java 11 is required for this project.")
 }
 
-val awsVersion = "1.12.768"
-val awsSdk2Version = "2.37.3"
+val awsVersion = "2.37.3"
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.25",
   "ch.qos.logback" % "logback-classic" % "1.3.14",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "com.amazonaws" % "aws-lambda-java-core" % "1.4.0",
-  "software.amazon.awssdk" % "sdk-core" % awsSdk2Version,
-  "software.amazon.awssdk" % "ssm" % awsSdk2Version,
-  "com.amazonaws" % "aws-java-sdk-s3" % awsVersion,
+  "software.amazon.awssdk" % "sdk-core" % awsVersion,
+  "software.amazon.awssdk" % "ssm" % awsVersion,
+  "software.amazon.awssdk" % "s3" % awsVersion,
   "com.amazonaws" % "aws-lambda-java-events" % "2.0.1",
   "com.typesafe" % "config" % "1.3.1",
   "org.scalactic" %% "scalactic" % "3.2.15",
