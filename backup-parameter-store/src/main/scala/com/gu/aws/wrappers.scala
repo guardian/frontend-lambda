@@ -1,29 +1,26 @@
 package com.gu.aws
 
-import java.io.ByteArrayInputStream
-import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredentialsProvider }
-import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model.{ ObjectMetadata, PutObjectRequest, PutObjectResult, SSEAwsKeyManagementParams }
-import com.amazonaws.services.simplesystemsmanagement.{ AWSSimpleSystemsManagement, AWSSimpleSystemsManagementClientBuilder }
-import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest
+import software.amazon.awssdk.core.sync.RequestBody
+
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.{ PutObjectRequest, PutObjectResponse, ServerSideEncryption }
+import software.amazon.awssdk.services.ssm.SsmClient
+import software.amazon.awssdk.services.ssm.model.GetParametersByPathRequest
 
 import scala.jdk.CollectionConverters._
 import scala.annotation.tailrec
 
 object AwsConfig {
-  val provider = new AWSCredentialsProviderChain(
-    new ProfileCredentialsProvider("frontend"),
-    InstanceProfileCredentialsProvider.getInstance())
   val region = "eu-west-1"
   val kmsKeyAlias: String = "arn:aws:kms:eu-west-1:642631414762:alias/FrontendConfigKey"
 }
 
 class ParameterStore {
 
-  private lazy val client: AWSSimpleSystemsManagement = AWSSimpleSystemsManagementClientBuilder
-    .standard()
-    .withRegion(AwsConfig.region)
+  private lazy val client: SsmClient = SsmClient
+    .builder()
+    .region(Region.of(AwsConfig.region))
     .build()
 
   def unwrapQuotedString(input: String): String = {
@@ -39,20 +36,26 @@ class ParameterStore {
     @tailrec
     def paginate(accum: Map[String, String], nextToken: Option[String]): Map[String, String] = {
 
-      val parameterRequest = new GetParametersByPathRequest()
-        .withWithDecryption(true)
-        .withPath(path)
-        .withRecursive(isRecursiveSearch)
+      val parameterRequest = GetParametersByPathRequest
+        .builder()
+        .withDecryption(true)
+        .path(path)
+        .recursive(isRecursiveSearch)
+        .build()
 
-      val parameterRequestWithNextToken = nextToken.map(parameterRequest.withNextToken).getOrElse(parameterRequest)
+      val parameterRequestWithNextToken = nextToken
+        .map(token => parameterRequest
+          .toBuilder.nextToken(token)
+          .build())
+        .getOrElse(parameterRequest)
 
       val result = client.getParametersByPath(parameterRequestWithNextToken)
 
-      val resultMap = result.getParameters.asScala.map { param =>
-        param.getName -> unwrapQuotedString(param.getValue)
+      val resultMap = result.parameters().asScala.map { param =>
+        param.name() -> unwrapQuotedString(param.value)
       }.toMap
 
-      Option(result.getNextToken) match {
+      Option(result.nextToken()) match {
         case Some(next) => paginate(accum ++ resultMap, Some(next))
         case None => accum ++ resultMap
       }
@@ -63,19 +66,22 @@ class ParameterStore {
 }
 
 class S3 {
-  private val s3Client = AmazonS3ClientBuilder
-    .standard()
-    .withRegion(AwsConfig.region)
+  private val s3Client = S3Client
+    .builder()
+    .region(Region.of(AwsConfig.region))
     .build()
 
-  def put(bucket: String, key: String, content: String, kmsKey: String): PutObjectResult = {
+  def put(bucket: String, key: String, content: String, kmsKey: String): PutObjectResponse = {
     val bytes = content.getBytes()
-    val metadata = new ObjectMetadata()
-    metadata.setContentLength(bytes.length)
 
-    val putObjectRequest = new PutObjectRequest(bucket, key, new ByteArrayInputStream(bytes), metadata)
-      .withSSEAwsKeyManagementParams(new SSEAwsKeyManagementParams(kmsKey))
+    val putObjectRequest = PutObjectRequest.builder()
+      .bucket(bucket)
+      .key(key)
+      .contentLength(bytes.length)
+      .serverSideEncryption(ServerSideEncryption.AWS_KMS)
+      .ssekmsKeyId(kmsKey)
+      .build()
 
-    s3Client.putObject(putObjectRequest)
+    s3Client.putObject(putObjectRequest, RequestBody.fromBytes(bytes))
   }
 }
