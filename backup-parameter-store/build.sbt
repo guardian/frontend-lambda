@@ -5,7 +5,7 @@ organization := "com.gu"
 
 description:= "Backs up parameter store properties. To be executed on an interval"
 
-scalaVersion := "2.13.17"
+scalaVersion := "2.13.18"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -13,12 +13,6 @@ scalacOptions ++= Seq(
   "-release:11",
   "-Ywarn-dead-code"
 )
-
-initialize := {
-  val _ = initialize.value
-  assert(sys.props("java.specification.version") == "11",
-    "Java 11 is required for this project.")
-}
 
 val awsVersion = "2.37.3"
 
