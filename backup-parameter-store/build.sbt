@@ -26,7 +26,7 @@ libraryDependencies ++= Seq(
   "software.amazon.awssdk" % "s3" % awsVersion,
   "com.amazonaws" % "aws-lambda-java-events" % "2.0.2",
   "com.typesafe" % "config" % "1.3.4",
-  "org.scalactic" %% "scalactic" % "3.2.15",
+  "org.scalactic" %% "scalactic" % "3.2.20",
   "org.scalatest" %% "scalatest" % "3.2.15" % Test,
   "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % "test",
   "org.mockito" % "mockito-core" % "5.23.0" % Test,
