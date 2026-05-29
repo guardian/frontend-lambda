@@ -19,7 +19,7 @@ libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-lambda-java-log4j2" % "1.6.2",
   "org.scalatest" %% "scalatest" % "3.2.15" % "test",
   "org.mockito" % "mockito-all" % "1.10.19" % "test",
-  "commons-codec" % "commons-codec" % "1.15"
+  "commons-codec" % "commons-codec" % "1.22.0"
 )
   
 def env(key: String): Option[String] = Option(System.getenv(key))
