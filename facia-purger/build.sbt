@@ -3,7 +3,7 @@ import sbtassembly.Log4j2MergeStrategy
 name := "facia-purger"
 
 scalaVersion := "2.13.18"
-val log4jVersion = "2.25.4"
+val log4jVersion = "2.26.0"
 
 organization := "com.gu"
 description := "Lambda for purging Fastly cache based on s3 events"
