@@ -18,7 +18,7 @@ val awsVersion = "2.42.41"
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "2.0.18",
-  "ch.qos.logback" % "logback-classic" % "1.5.32",
+  "ch.qos.logback" % "logback-classic" % "1.5.33",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
   "com.amazonaws" % "aws-lambda-java-core" % "1.4.0",
   "software.amazon.awssdk" % "sdk-core" % awsVersion,
