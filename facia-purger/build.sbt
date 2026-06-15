@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "org.apache.logging.log4j" % "log4j-api" % log4jVersion,
   "org.apache.logging.log4j" % "log4j-core" % log4jVersion,
   "org.apache.logging.log4j" % "log4j-slf4j-impl" % log4jVersion,
-  "com.amazonaws" % "aws-lambda-java-log4j2" % "1.6.2",
+  "com.amazonaws" % "aws-lambda-java-log4j2" % "1.6.4",
   "org.scalatest" %% "scalatest" % "3.2.20" % "test",
   "org.mockito" % "mockito-all" % "1.10.19" % "test",
   "commons-codec" % "commons-codec" % "1.22.0"
