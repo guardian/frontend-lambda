@@ -11,7 +11,7 @@ description := "Lambda for purging Fastly cache based on s3 events"
 libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-lambda-java-core" % "1.4.0",
   "com.amazonaws" % "aws-lambda-java-events" % "3.16.1",
-  "com.squareup.okhttp3" % "okhttp" % "4.9.3",
+  "com.squareup.okhttp3" % "okhttp" % "4.12.0",
   "org.parboiled" %% "parboiled" % "2.5.1",
   "org.apache.logging.log4j" % "log4j-api" % log4jVersion,
   "org.apache.logging.log4j" % "log4j-core" % log4jVersion,
