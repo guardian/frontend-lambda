@@ -14,7 +14,7 @@ scalacOptions ++= Seq(
   "-Ywarn-dead-code"
 )
 
-val awsVersion = "2.46.5"
+val awsVersion = "2.46.14"
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "2.0.18",
