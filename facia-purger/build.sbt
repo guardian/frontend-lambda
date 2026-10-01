@@ -33,6 +33,7 @@ assembly / assemblyMergeStrategy := {
   // https://stackoverflow.com/a/55557287
   // Okhttp and log4j both have module-info files, but we don't actually need either file.
   case PathList(ps @ _*) if ps.last == "module-info.class" => MergeStrategy.discard
+  case PathList(ps @ _*) if ps.last == "okio.kotlin_module" => MergeStrategy.first
   case x =>
     val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
