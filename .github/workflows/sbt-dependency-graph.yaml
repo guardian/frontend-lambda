@@ -19,7 +19,7 @@ jobs:
           java-version: 11
       - name: Install sbt
         id: sbt
-        uses: sbt/setup-sbt@8a071aa780c993c7a204c785d04d3e8eb64ef272 # v1.1.0
+        uses: sbt/setup-sbt@ecad189dd245444b9ae0a0cd5922fd938b88906f # v1.5.12
 
       - name: Submit dependencies for backup-parameter-store
         id: submit-backup-parameter-store
