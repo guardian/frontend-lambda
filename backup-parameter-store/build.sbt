@@ -29,8 +29,8 @@ libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.2.20",
   "org.scalatest" %% "scalatest" % "3.2.20" % Test,
   "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % "test",
-  "org.mockito" % "mockito-core" % "5.23.0" % Test,
-  "org.mockito" % "mockito-junit-jupiter" % "5.23.0" % Test
+  "org.mockito" % "mockito-core" % "5.24.0" % Test,
+  "org.mockito" % "mockito-junit-jupiter" % "5.24.0" % Test
 )
 
 assemblyJarName := s"${name.value}.jar"
