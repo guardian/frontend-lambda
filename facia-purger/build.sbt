@@ -2,7 +2,7 @@ import sbtassembly.Log4j2MergeStrategy
 
 name := "facia-purger"
 
-scalaVersion := "2.13.18"
+scalaVersion := "3.9.0"
 val log4jVersion = "2.26.0"
 
 organization := "com.gu"
